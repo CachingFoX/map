@@ -23,6 +23,9 @@ export class SidebarLayers extends SidebarItem {
             {type: MapType.HUMANITARIAN, option: null},
             {type: MapType.ARCGIS_WORLDIMAGERY, option: null},
             {type: MapType.ARCGIS_WORLDIMAGERY_OVERLAY, option: null},
+            {type: MapType.GOOGLE_MAPS, option: null},
+            {type: MapType.GOOGLE_SATELLITE, option: null},
+            {type: MapType.GOOGLE_HYBRID, option: null},
         ];
 
         this.base_layer_select = this._div.querySelector("[data-base-layer]")!;
