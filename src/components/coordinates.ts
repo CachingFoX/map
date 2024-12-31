@@ -153,62 +153,109 @@ export class Coordinates {
         return new Coordinates(lat, lng);
     }
 
+    public static from_reverse_wherigo(varA: number, varB: number, varC: number) : Coordinates | null {
+        let latSign = 1.0;
+        let lonSign = 1.0;
+        let lonValue = 0.0;
+        let latValue = 0.0;
+
+        if ((varA % 1000 - varA % 100) / 100 == 1) {
+            latSign = 1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 2) {
+            latSign = -1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 3) {
+            latSign = 1;
+            lonSign = -1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 4) {
+            latSign = -1;
+            lonSign = -1;
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0) {
+            // A4 B2  B5 C3 A6 C2 A1
+            latValue = Number(((varA % 10000 - varA % 1000) / 1000 * 10 + (varB % 100 - varB % 10) / 10 + (varB % 100000 - varB % 10000) / 10000 * 0.1 + (varC % 1000 - varC % 100) / 100 * 0.01 + (varA % 1000000 - varA % 100000) / 100000 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + varA % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0) {
+            // B6 A1   A4 C6 C3 C2 A6
+            latValue = Number(((varB % 1000000 - varB % 100000) / 100000 * 10 + varA % 10 + (varA % 10000 - varA % 1000) / 1000 * 0.1 + (varC % 1000000 - varC % 100000) / 100000 * 0.01 + (varC % 1000 - varC % 100) / 100 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + (varA % 1000000 - varA % 100000) / 100000 * 1.0E-5))
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0 ) {
+            // A5 C6  C1 B3 B6 A2
+            lonValue = Number(((varA % 100000 - varA % 10000) / 10000 * 100 + (varC % 1000000 - varC % 100000) / 100000 * 10 + varC % 10 + (varB % 1000 - varB % 100) / 100 * 0.1 + (varB % 1000000 - varB % 100000) / 100000 * 0.01 + (varA % 100 - varA % 10) / 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + varB % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0 ) {
+            // B2 C1 A2  A5 B3 B1 ??
+            lonValue = Number(((varB % 100 - varB % 10) / 10 * 100 + varC % 10 * 10 + (varA % 100 - varA % 10) / 10 + (varA % 100000 - varA % 10000) / 10000 * 0.1 + (varB % 1000 - varB % 100) / 100 * 0.01 + varB % 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + (varB % 100000 - varB % 10000) / 10000 * 1.0E-5));
+        }
+      
+        latValue = latSign * latValue;
+        lonValue = lonSign * lonValue;
+
+        return new Coordinates(latValue,lonValue)
+    }
+
     public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
         const patterns = [
-            // DM / H D M
+            // DMM / H D M (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 0, 4, 5, 6, 0],
             },
-            // DM / D H M
+            // DMM / D H M (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [2, 1, 3, 0, 5, 4, 6, 0],
             },
-            // DM / D M H
+            // DMM / D M H (postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS])$/,
                 fields: [3, 1, 2, 0, 6, 4, 5, 0],
             },
-            // DM / D M
+            // DMM / D M (without hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 0, "E", 3, 4, 0],
             },
-            // DMS / H D M S
+            // DMS / H D M S (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 4, 5, 6, 7, 8],
             },
-            // DMS / D H M S
+            // DMS / D H M S (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [2, 1, 3, 4, 6, 5, 7, 8],
             },
-            // DMS / D M S H
+            // DMS / D M S H (postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                fields: [4, 1, 2, 3, 6, 5, 6, 7],
+                regexp: /^(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS])$/,
+                fields: [4, 1, 2, 3, 8, 5, 6, 7],
             },
-            // DMS / D M S
+            // DMS / D M S - without hemisphere
             {
-                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+) (\d+\.?\d*) (\d+) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 3, "E", 4, 5, 6],
             },
-            // D / H D
+            // DEC - prefix hemisphere
             {
-                regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [1, 2, 0, 0, 3, 4, 0, 0],
             },
-            // D / D H
+            // DEC - postfix hemisphere
             {
-                regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*) ?([NEWS])$/,
                 fields: [2, 1, 0, 0, 4, 3, 0, 0],
             },
-            // D / D
+            // DEC - without hemisphere
             {
-                regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                regexp: /^(-?\d+\.?\d*) (-?\d+\.?\d*)$/,
                 fields: ["+", 1, 0, 0, "+", 2, 0, 0],
             },
         ];
@@ -228,6 +275,15 @@ export class Coordinates {
 
             return 0;
         };
+
+        // check for Reverse Wherigo coordinates
+        const m = s.match(/^(\d+) (\d+) (\d+)$/);
+        if (m !== null) {
+            let a = parseInt(m[1]);
+            let b = parseInt(m[2]);
+            let c = parseInt(m[3]);
+            return Coordinates.from_reverse_wherigo(a, b, c)
+        }
 
         for (const p of patterns) {
             const m = s.match(p.regexp);
@@ -297,18 +353,19 @@ export class Coordinates {
             this.NS() +
             " " +
             pad(lat_deg, 2) +
-            " " +
+            "° " +
             pad(lat_minutes, 2) +
             "." +
             pad(lat_milli_minutes, 3) +
-            " " +
+            "' " +
             this.EW() +
             " " +
             pad(lng_deg, 3) +
             " " +
             pad(lng_minutes, 2) +
             "." +
-            pad(lng_milli_minutes, 3)
+            pad(lng_milli_minutes, 3) +
+            "'"
         );
     }
 
@@ -491,12 +548,15 @@ export class Coordinates {
 
         // Try to map commas to spaces or periods
         if (commas === 1 && (periods === 0 || periods >= 2)) {
-            return sanitized.replace(/,/g, " ");
+            sanitized = sanitized.replace(/,/g, " ");
+        } else if (commas >= 1 && periods === 0) {
+            sanitized = sanitized.replace(/,/g, ".");
         }
 
-        if (commas >= 1 && periods === 0) {
-            return sanitized.replace(/,/g, ".");
-        }
+        sanitized = sanitized.replace(/\s\s+/g, " ");
+
+        // remove trailing and ... whitespace characters
+        sanitized = sanitized.trim();
 
         return sanitized;
     }

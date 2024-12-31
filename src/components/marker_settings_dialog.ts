@@ -15,9 +15,9 @@ export class MarkerSettingsDialog extends Dialog {
 
         const format = this._div.querySelector("[data-coordinates-format]")!;
         [
-            {id: CoordinatesFormat.D, name: "Degrees"},
-            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
-            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"},
+            {id: CoordinatesFormat.D, name: "WGS84 / ddd.dddddd°"},
+            {id: CoordinatesFormat.DM, name: "WGS84 / ddd° mm.mmm'"},
+            {id: CoordinatesFormat.DMS, name: "WGS84 / ddd° mm' ss.ss\""},
         ].forEach((item: ICoordinatesFormatDict): void => {
             format.append(
                 new Option(
