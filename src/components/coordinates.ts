@@ -156,57 +156,57 @@ export class Coordinates {
     public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
         const patterns = [
-            // DM / H D M
+            // DMM / H D M (prefix hemisphere)
             {
                 regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
                 fields: [1, 2, 3, 0, 4, 5, 6, 0],
             },
-            // DM / D H M
+            // DMM / D H M (semi-postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
                 fields: [2, 1, 3, 0, 5, 4, 6, 0],
             },
-            // DM / D M H
+            // DMM / D M H (postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
                 fields: [3, 1, 2, 0, 6, 4, 5, 0],
             },
-            // DM / D M
+            // DMM / D M (without hemisphere)
             {
                 regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
                 fields: ["N", 1, 2, 0, "E", 3, 4, 0],
             },
-            // DMS / H D M S
+            // DMS / H D M S (prefix hemisphere)
             {
                 regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
                 fields: [1, 2, 3, 4, 5, 6, 7, 8],
             },
-            // DMS / D H M S
+            // DMS / D H M S (semi-postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
                 fields: [2, 1, 3, 4, 6, 5, 7, 8],
             },
-            // DMS / D M S H
+            // DMS / D M S H (postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
                 fields: [4, 1, 2, 3, 8, 5, 6, 7],
             },
-            // DMS / D M S
+            // DMS / D M S - without hemisphere
             {
                 regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
                 fields: ["N", 1, 2, 3, "E", 4, 5, 6],
             },
-            // D / H D
+            // DEC - prefix hemisphere
             {
                 regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
                 fields: [1, 2, 0, 0, 3, 4, 0, 0],
             },
-            // D / D H
+            // DEC - postfix hemisphere
             {
                 regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
                 fields: [2, 1, 0, 0, 4, 3, 0, 0],
             },
-            // D / D
+            // DEC - without hemisphere
             {
                 regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
                 fields: ["+", 1, 0, 0, "+", 2, 0, 0],
