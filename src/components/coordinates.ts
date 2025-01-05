@@ -100,6 +100,20 @@ export class Coordinates {
         let lat: number;
         let lng: number;
 
+        // check if latitude and longitude to continue
+        if (((h1 === "N" || h1 === "S") && (h2 === "N" || h2 === "S")) ||
+            ((h1 === "E" || h1 === "W") && (h2 === "E" || h2 === "W"))) {
+            return null
+        }
+
+        // is order longitude/latitude
+        if ((h1 === "E" || h1 === "W") && (h2 === "N" || h2 === "S")) {
+            return Coordinates.from_components(h2,d2,m2,s2,h1,d1,m1,s1);
+        }
+
+        // verify latitude values
+        // is degree negative (instead decimal format)
+        // avoid N-12° 34.567
         if (h1 !== "+" && d1 < 0) {
             return null;
         }
@@ -112,6 +126,8 @@ export class Coordinates {
             return null;
         }
 
+        // verify longitude values
+        // is degree negative (instead decimal format)
         if (h2 !== "+" && d2 < 0) {
             return null;
         }
@@ -122,32 +138,15 @@ export class Coordinates {
             return null;
         }
 
-        const c1 = d1 + m1 / 60 + s1 / 3600;
-        const c2 = d2 + m2 / 60 + s2 / 3600;
+        // calculate latitude and longitude
+        lat = d1 + m1 / 60 + s1 / 3600;
+        lng = d2 + m2 / 60 + s2 / 3600;
 
-        if (h1 === "+" && h2 === "+") {
-            lat = c1;
-            lng = c2;
-        } else if ((h1 === "N" || h1 === "S") && (h2 === "E" || h2 === "W")) {
-            lat = c1;
-            lng = c2;
         if (h1 === "S") {
             lat = -lat;
         }
         if (h2 === "W") {
             lng = -lng;
-        }
-        } else if ((h2 === "N" || h2 === "S") && (h1 === "E" || h1 === "W")) {
-            lat = c2;
-            lng = c1;
-            if (h2 === "S") {
-                lat = -lat;
-            }
-            if (h1 === "W") {
-                lng = -lng;
-            }
-        } else {
-            return null;
         }
 
         return new Coordinates(lat, lng);
