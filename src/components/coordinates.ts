@@ -158,32 +158,32 @@ export class Coordinates {
         const patterns = [
             // DMM / H D M (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 0, 4, 5, 6, 0],
             },
             // DMM / D H M (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [2, 1, 3, 0, 5, 4, 6, 0],
             },
             // DMM / D M H (postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS])$/,
                 fields: [3, 1, 2, 0, 6, 4, 5, 0],
             },
             // DMM / D M (without hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 0, "E", 3, 4, 0],
             },
             // DMS / H D M S (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 4, 5, 6, 7, 8],
             },
             // DMS / D H M S (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [2, 1, 3, 4, 6, 5, 7, 8],
             },
             // DMS / D M S H (postfix hemisphere)
@@ -193,22 +193,22 @@ export class Coordinates {
             },
             // DMS / D M S - without hemisphere
             {
-                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+) (\d+\.?\d*) (\d+) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 3, "E", 4, 5, 6],
             },
             // DEC - prefix hemisphere
             {
-                regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [1, 2, 0, 0, 3, 4, 0, 0],
             },
             // DEC - postfix hemisphere
             {
-                regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*) ?([NEWS])$/,
                 fields: [2, 1, 0, 0, 4, 3, 0, 0],
             },
             // DEC - without hemisphere
             {
-                regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                regexp: /^(-?\d+\.?\d*) (-?\d+\.?\d*)$/,
                 fields: ["+", 1, 0, 0, "+", 2, 0, 0],
             },
         ];
@@ -491,12 +491,15 @@ export class Coordinates {
 
         // Try to map commas to spaces or periods
         if (commas === 1 && (periods === 0 || periods >= 2)) {
-            return sanitized.replace(/,/g, " ");
+            sanitized = sanitized.replace(/,/g, " ");
+        } else if (commas >= 1 && periods === 0) {
+            sanitized = sanitized.replace(/,/g, ".");
         }
 
-        if (commas >= 1 && periods === 0) {
-            return sanitized.replace(/,/g, ".");
-        }
+        sanitized = sanitized.replace(/\s\s+/g, " ");
+
+        // remove trailing and ... whitespace characters
+        sanitized = sanitized.trim();
 
         return sanitized;
     }

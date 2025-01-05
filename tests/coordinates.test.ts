@@ -35,11 +35,11 @@ describe('functions', () => {
 
 describe('sanitize_string', () => {
     it('trim whitespaces at begin and end', () => {
-        expect(Coordinates.sanitize_string("  A  ")).toBe("  A  ")
-        expect(Coordinates.sanitize_string(" \t A \n ")).toBe("   A   ")
+        expect(Coordinates.sanitize_string("  A  ")).toBe("A")
+        expect(Coordinates.sanitize_string(" \t A \n ")).toBe("A")
     })
     it('trim whitespaces after replacement', () => {
-        expect(Coordinates.sanitize_string("A°")).toBe("A ")
+        expect(Coordinates.sanitize_string("A°")).toBe("A")
     })
     it('German Ost Hemisphare (o/O)', () => {
         expect(Coordinates.sanitize_string("N50 12.234 o008 12.345")).toBe("N50 12.234 E008 12.345")
@@ -52,14 +52,14 @@ describe('sanitize_string', () => {
         expect(Coordinates.sanitize_string("0123456789-")).toBe("0123456789-")
     })
     it('Not allowed characters', () => {
-        expect(Coordinates.sanitize_string("°'\"")).toBe("   ")
+        expect(Coordinates.sanitize_string("°'\"")).toBe("")
     })
     it("Comma as separator between lat/long", () => {
         expect(Coordinates.sanitize_string("A,B")).toBe("A B")
         expect(Coordinates.sanitize_string("A.C,B.D")).toBe("A.C B.D")
     })
     it("Comma as decimal separator in lat/long", () => {
-        expect(Coordinates.sanitize_string("A,C B,D ")).toBe("A.C B.D ")
+        expect(Coordinates.sanitize_string("A,C B,D ")).toBe("A.C B.D")
         expect(Coordinates.sanitize_string("N50 12.234,E008 12.345")).toBe("N50 12.234 E008 12.345")
     })
     it("Comma as decimal separator only in lat", () => {
@@ -69,7 +69,7 @@ describe('sanitize_string', () => {
     })
     it("single spaces", () => {
         // comma in only one part doesn't work
-        expect(Coordinates.sanitize_string("A##B")).toBe("A  B")
+        expect(Coordinates.sanitize_string("A##B")).toBe("A B")
     })
 });
 
