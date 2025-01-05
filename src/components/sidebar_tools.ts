@@ -106,6 +106,15 @@ export class SidebarTools extends SidebarItem {
         document.querySelector("#btn-multi-markers")!.addEventListener("click", (): void => {
             this.app.show_multi_markers_dialog();
         });
+
+        document.querySelector("#btn-geocaching-map")!.addEventListener("click", (): void => {
+            var center = this.app.map_state.center;
+            var url = `https://www.geocaching.com/live/play/map?lat=${center?.lat()}&lng=${center?.lng()}&zoom=${this.app.map_state.zoom}&mlat=${center?.lat()}&mlng=${center?.lng()}`
+            const newTab = window.open(url, '_blank');
+            if (newTab) {
+                newTab.focus();
+            }
+        });
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
