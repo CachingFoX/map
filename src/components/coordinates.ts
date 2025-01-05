@@ -100,6 +100,20 @@ export class Coordinates {
         let lat: number;
         let lng: number;
 
+        // check if latitude and longitude to continue
+        if (((h1 === "N" || h1 === "S") && (h2 === "N" || h2 === "S")) ||
+            ((h1 === "E" || h1 === "W") && (h2 === "E" || h2 === "W"))) {
+            return null
+        }
+
+        // is order longitude/latitude
+        if ((h1 === "E" || h1 === "W") && (h2 === "N" || h2 === "S")) {
+            return Coordinates.from_components(h2,d2,m2,s2,h1,d1,m1,s1);
+        }
+
+        // verify latitude values
+        // is degree negative (instead decimal format)
+        // avoid N-12° 34.567
         if (h1 !== "+" && d1 < 0) {
             return null;
         }
@@ -112,6 +126,8 @@ export class Coordinates {
             return null;
         }
 
+        // verify longitude values
+        // is degree negative (instead decimal format)
         if (h2 !== "+" && d2 < 0) {
             return null;
         }
@@ -122,127 +138,185 @@ export class Coordinates {
             return null;
         }
 
-        const c1 = d1 + m1 / 60 + s1 / 3600;
-        const c2 = d2 + m2 / 60 + s2 / 3600;
+        // calculate latitude and longitude
+        lat = d1 + m1 / 60 + s1 / 3600;
+        lng = d2 + m2 / 60 + s2 / 3600;
 
-        if (h1 === "+" && h2 === "+") {
-            lat = c1;
-            lng = c2;
-        } else if ((h1 === "N" || h1 === "S") && (h2 === "E" || h2 === "W")) {
-            lat = c1;
-            lng = c2;
-            if (h1 === "S") {
-                lat = -lat;
-            }
-            if (h2 === "W") {
-                lng = -lng;
-            }
-        } else if ((h2 === "N" || h2 === "S") && (h1 === "E" || h1 === "W")) {
-            lat = c2;
-            lng = c1;
-            if (h2 === "S") {
-                lat = -lat;
-            }
-            if (h1 === "W") {
-                lng = -lng;
-            }
-        } else {
-            return null;
+        if (h1 === "S") {
+            lat = -lat;
+        }
+        if (h2 === "W") {
+            lng = -lng;
         }
 
         return new Coordinates(lat, lng);
     }
 
+    public static from_reverse_wherigo(varA: number, varB: number, varC: number) : Coordinates | null {
+        let latSign = 1.0;
+        let lonSign = 1.0;
+        let lonValue = 0.0;
+        let latValue = 0.0;
+
+        if ((varA % 1000 - varA % 100) / 100 == 1) {
+            latSign = 1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 2) {
+            latSign = -1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 3) {
+            latSign = 1;
+            lonSign = -1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 4) {
+            latSign = -1;
+            lonSign = -1;
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0) {
+            // A4 B2  B5 C3 A6 C2 A1
+            latValue = Number(((varA % 10000 - varA % 1000) / 1000 * 10 + (varB % 100 - varB % 10) / 10 + (varB % 100000 - varB % 10000) / 10000 * 0.1 + (varC % 1000 - varC % 100) / 100 * 0.01 + (varA % 1000000 - varA % 100000) / 100000 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + varA % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0) {
+            // B6 A1   A4 C6 C3 C2 A6
+            latValue = Number(((varB % 1000000 - varB % 100000) / 100000 * 10 + varA % 10 + (varA % 10000 - varA % 1000) / 1000 * 0.1 + (varC % 1000000 - varC % 100000) / 100000 * 0.01 + (varC % 1000 - varC % 100) / 100 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + (varA % 1000000 - varA % 100000) / 100000 * 1.0E-5))
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0 ) {
+            // A5 C6  C1 B3 B6 A2
+            lonValue = Number(((varA % 100000 - varA % 10000) / 10000 * 100 + (varC % 1000000 - varC % 100000) / 100000 * 10 + varC % 10 + (varB % 1000 - varB % 100) / 100 * 0.1 + (varB % 1000000 - varB % 100000) / 100000 * 0.01 + (varA % 100 - varA % 10) / 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + varB % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0 ) {
+            // B2 C1 A2  A5 B3 B1 ??
+            lonValue = Number(((varB % 100 - varB % 10) / 10 * 100 + varC % 10 * 10 + (varA % 100 - varA % 10) / 10 + (varA % 100000 - varA % 10000) / 10000 * 0.1 + (varB % 1000 - varB % 100) / 100 * 0.01 + varB % 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + (varB % 100000 - varB % 10000) / 10000 * 1.0E-5));
+        }
+      
+        latValue = latSign * latValue;
+        lonValue = lonSign * lonValue;
+
+        return new Coordinates(latValue,lonValue)
+    }
+
     public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
+
+        // check for Reverse Wherigo coordinates
+        const yyy = (m: RegExpMatchArray, p: any) : Coordinates | null => {
+            let a = parseInt(m[1]);
+            let b = parseInt(m[2]);
+            let c = parseInt(m[3]);
+            return Coordinates.from_reverse_wherigo(a, b, c)
+        };
+
+        const xxx = (m: RegExpMatchArray, p: any) : Coordinates | null => {
+            const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
+                if (typeof index === "number") {
+                    return match[index];
+                }
+    
+                return index;
+            };
+    
+            const extract_component = (match: RegExpMatchArray, index: number): number => {
+                if (index > 0) {
+                    return parseFloat(match[index]);
+                }
+    
+                return 0;
+            };
+            const c = Coordinates.from_components(
+                extract_hemisphere(m, p.fields[0]),
+                extract_component(m, p.fields[1] as number),
+                extract_component(m, p.fields[2] as number),
+                extract_component(m, p.fields[3] as number),
+                extract_hemisphere(m, p.fields[4]),
+                extract_component(m, p.fields[5] as number),
+                extract_component(m, p.fields[6] as number),
+                extract_component(m, p.fields[7] as number),
+            );
+            return c
+        }
+
         const patterns = [
-            // DM / H D M
+            // DMM / H D M (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 0, 4, 5, 6, 0],
+                factory: xxx,
             },
-            // DM / D H M
+            // DMM / D H M (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [2, 1, 3, 0, 5, 4, 6, 0],
+                factory: xxx,
             },
-            // DM / D M H
+            // DMM / D M H (postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS])$/,
                 fields: [3, 1, 2, 0, 6, 4, 5, 0],
+                factory: xxx,
             },
-            // DM / D M
+            // DMM / D M (without hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+\.?\d*) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 0, "E", 3, 4, 0],
+                factory: xxx,
             },
-            // DMS / H D M S
+            // DMS / H D M S (prefix hemisphere)
             {
-                regexp: /^\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 4, 5, 6, 7, 8],
+                factory: xxx,
             },
-            // DMS / D H M S
+            // DMS / D H M S (semi-postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s+(\d+)\s*([NEWS])\s*(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [2, 1, 3, 4, 6, 5, 7, 8],
+                factory: xxx,
             },
-            // DMS / D M S H
+            // DMS / D M S H (postfix hemisphere)
             {
-                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                fields: [4, 1, 2, 3, 6, 5, 6, 7],
+                regexp: /^(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS])$/,
+                fields: [4, 1, 2, 3, 8, 5, 6, 7],
+                factory: xxx,
             },
-            // DMS / D M S
+            // DMS / D M S - without hemisphere
             {
-                regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s+(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*$/,
+                regexp: /^(\d+) (\d+) (\d+\.?\d*) (\d+) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 3, "E", 4, 5, 6],
+                factory: xxx,
             },
-            // D / H D
+            // DEC - prefix hemisphere
             {
-                regexp: /^\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*$/,
+                regexp: /^([NEWS]) ?(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [1, 2, 0, 0, 3, 4, 0, 0],
+                factory: xxx,
             },
-            // D / D H
+            // DEC - postfix hemisphere
             {
-                regexp: /^\s*(\d+\.?\d*)\s*([NEWS])\s*(\d+\.?\d*)\s*([NEWS])\s*$/,
+                regexp: /^(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*) ?([NEWS])$/,
                 fields: [2, 1, 0, 0, 4, 3, 0, 0],
+                factory: xxx,
             },
-            // D / D
+            // DEC - without hemisphere
             {
-                regexp: /^\s*(-?\d+\.?\d*)\s+(-?\d+\.?\d*)\s*$/,
+                regexp: /^(-?\d+\.?\d*) (-?\d+\.?\d*)$/,
                 fields: ["+", 1, 0, 0, "+", 2, 0, 0],
+                factory: xxx,
             },
+            // Reverse Wherigo
+            {
+                regexp: /^(\d+) (\d+) (\d+)$/,
+                factory: yyy,
+            }
         ];
-
-        const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
-            if (typeof index === "number") {
-                return match[index];
-            }
-
-            return index;
-        };
-
-        const extract_component = (match: RegExpMatchArray, index: number): number => {
-            if (index > 0) {
-                return parseFloat(match[index]);
-            }
-
-            return 0;
-        };
 
         for (const p of patterns) {
             const m = s.match(p.regexp);
             if (m !== null) {
-                const c = Coordinates.from_components(
-                    extract_hemisphere(m, p.fields[0]),
-                    extract_component(m, p.fields[1] as number),
-                    extract_component(m, p.fields[2] as number),
-                    extract_component(m, p.fields[3] as number),
-                    extract_hemisphere(m, p.fields[4]),
-                    extract_component(m, p.fields[5] as number),
-                    extract_component(m, p.fields[6] as number),
-                    extract_component(m, p.fields[7] as number),
-                );
-
+                const c = p.factory(m, p);
                 if (c !== null) {
                     return c;
                 }
@@ -255,7 +329,7 @@ export class Coordinates {
     public to_string(format: string): string {
         switch (format) {
             case CoordinatesFormat.D:
-                return this.to_string_D();
+                return this.to_string_DEC();
             case CoordinatesFormat.DMS:
                 return this.to_string_DMS();
             case CoordinatesFormat.DM:
@@ -295,20 +369,21 @@ export class Coordinates {
         return (
             // tslint:disable-next-line: prefer-template
             this.NS() +
-            " " +
+            "" +
             pad(lat_deg, 2) +
-            " " +
+            "° " +
             pad(lat_minutes, 2) +
             "." +
             pad(lat_milli_minutes, 3) +
-            " " +
+            "' " +
             this.EW() +
-            " " +
+            "" +
             pad(lng_deg, 3) +
-            " " +
+            "° " +
             pad(lng_minutes, 2) +
             "." +
-            pad(lng_milli_minutes, 3)
+            pad(lng_milli_minutes, 3) +
+            "'"
         );
     }
 
@@ -331,27 +406,28 @@ export class Coordinates {
         return (
             // tslint:disable-next-line: prefer-template
             this.NS() +
-            " " +
+            "" +
             pad(lat_deg, 2) +
-            " " +
+            "° " +
             pad(lat_minutes, 2) +
-            " " +
+            "' " +
             pad(lat_seconds.toFixed(2), 5) +
-            " " +
+            "\" " +
             this.EW() +
-            " " +
+            "" +
             pad(lng_deg, 3) +
-            " " +
+            "° " +
             pad(lng_minutes, 2) +
-            " " +
-            pad(lng_seconds.toFixed(2), 5)
+            "' " +
+            pad(lng_seconds.toFixed(2), 5) +
+            "\""
         );
     }
 
-    public to_string_D(): string {
-        return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(
+    public to_string_DEC(): string {
+        return `${this.NS()}${Math.abs(this.lat()).toFixed(6)}° ${this.EW()}${Math.abs(
             this.lng(),
-        ).toFixed(6)}`;
+        ).toFixed(6)}°`;
     }
 
     public distance(other: Coordinates): number {
@@ -476,7 +552,7 @@ export class Coordinates {
             if (c === "o" || c === "O") {
                 // Map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += "E";
-            } else if (c.match(/[a-z0-9-]/i) !== null) {
+            } else if (c.match(/[nswe0-9-]/i) !== null) {
                 sanitized += c.toUpperCase();
             } else if (c === ".") {
                 periods += 1;
@@ -491,12 +567,15 @@ export class Coordinates {
 
         // Try to map commas to spaces or periods
         if (commas === 1 && (periods === 0 || periods >= 2)) {
-            return sanitized.replace(/,/g, " ");
+            sanitized = sanitized.replace(/,/g, " ");
+        } else if (commas >= 1 && periods === 0) {
+            sanitized = sanitized.replace(/,/g, ".");
         }
 
-        if (commas >= 1 && periods === 0) {
-            return sanitized.replace(/,/g, ".");
-        }
+        sanitized = sanitized.replace(/\s\s+/g, " ");
+
+        // remove trailing and ... whitespace characters
+        sanitized = sanitized.trim();
 
         return sanitized;
     }
