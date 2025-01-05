@@ -154,94 +154,109 @@ export class Coordinates {
 
     public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
+
+        const read_DMS_groups = (m: RegExpMatchArray, p: any) : Coordinates | null => {
+            const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
+                if (typeof index === "number") {
+                    return match[index];
+                }
+    
+                return index;
+            };
+    
+            const extract_component = (match: RegExpMatchArray, index: number): number => {
+                if (index > 0) {
+                    return parseFloat(match[index]);
+                }
+    
+                return 0;
+            };
+            const c = Coordinates.from_components(
+                extract_hemisphere(m, p.fields[0]),
+                extract_component(m, p.fields[1] as number),
+                extract_component(m, p.fields[2] as number),
+                extract_component(m, p.fields[3] as number),
+                extract_hemisphere(m, p.fields[4]),
+                extract_component(m, p.fields[5] as number),
+                extract_component(m, p.fields[6] as number),
+                extract_component(m, p.fields[7] as number),
+            );
+            return c
+        }
+
         const patterns = [
             // DMM / H D M (prefix hemisphere)
             {
                 regexp: /^([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 0, 4, 5, 6, 0],
+                factory: read_DMS_groups,
             },
             // DMM / D H M (semi-postfix hemisphere)
             {
                 regexp: /^(\d+) ?([NEWS]) ?(\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [2, 1, 3, 0, 5, 4, 6, 0],
+                factory: read_DMS_groups,
             },
             // DMM / D M H (postfix hemisphere)
             {
                 regexp: /^(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS])$/,
                 fields: [3, 1, 2, 0, 6, 4, 5, 0],
+                factory: read_DMS_groups,
             },
             // DMM / D M (without hemisphere)
             {
                 regexp: /^(\d+) (\d+\.?\d*) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 0, "E", 3, 4, 0],
+                factory: read_DMS_groups,
             },
             // DMS / H D M S (prefix hemisphere)
             {
                 regexp: /^([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*)$/,
                 fields: [1, 2, 3, 4, 5, 6, 7, 8],
+                factory: read_DMS_groups,
             },
             // DMS / D H M S (semi-postfix hemisphere)
             {
                 regexp: /^(\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
                 fields: [2, 1, 3, 4, 6, 5, 7, 8],
+                factory: read_DMS_groups,
             },
             // DMS / D M S H (postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
                 fields: [4, 1, 2, 3, 8, 5, 6, 7],
+                factory: read_DMS_groups,
             },
             // DMS / D M S - without hemisphere
             {
                 regexp: /^(\d+) (\d+) (\d+\.?\d*) (\d+) (\d+) (\d+\.?\d*)$/,
                 fields: ["N", 1, 2, 3, "E", 4, 5, 6],
+                factory: read_DMS_groups,
             },
             // DEC - prefix hemisphere
             {
                 regexp: /^([NEWS]) ?(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*)$/,
                 fields: [1, 2, 0, 0, 3, 4, 0, 0],
+                factory: read_DMS_groups,
             },
             // DEC - postfix hemisphere
             {
                 regexp: /^(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*) ?([NEWS])$/,
                 fields: [2, 1, 0, 0, 4, 3, 0, 0],
+                factory: read_DMS_groups,
             },
             // DEC - without hemisphere
             {
                 regexp: /^(-?\d+\.?\d*) (-?\d+\.?\d*)$/,
                 fields: ["+", 1, 0, 0, "+", 2, 0, 0],
+                factory: read_DMS_groups,
             },
         ];
-
-        const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
-            if (typeof index === "number") {
-                return match[index];
-            }
-
-            return index;
-        };
-
-        const extract_component = (match: RegExpMatchArray, index: number): number => {
-            if (index > 0) {
-                return parseFloat(match[index]);
-            }
-
-            return 0;
-        };
 
         for (const p of patterns) {
             const m = s.match(p.regexp);
             if (m !== null) {
-                const c = Coordinates.from_components(
-                    extract_hemisphere(m, p.fields[0]),
-                    extract_component(m, p.fields[1] as number),
-                    extract_component(m, p.fields[2] as number),
-                    extract_component(m, p.fields[3] as number),
-                    extract_hemisphere(m, p.fields[4]),
-                    extract_component(m, p.fields[5] as number),
-                    extract_component(m, p.fields[6] as number),
-                    extract_component(m, p.fields[7] as number),
-                );
-
+                const c = p.factory(m, p);
                 if (c !== null) {
                     return c;
                 }
