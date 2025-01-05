@@ -15,7 +15,6 @@ export enum MapStateChange {
     MAPTYPE = 2,
     CENTER = 4,
     ZOOM = 8,
-    VIEW = 12,
     MARKERS = 16,
     LINES = 32,
     LANGUAGE = 64,
@@ -46,7 +45,7 @@ export class MapState {
     public markers_hash: Map<number, Marker>;
     public lines: Line[] = [];
     public lines_hash: Map<number, Line>;
-    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DM;
+    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMM;
     public settings_marker_random_color: boolean;
     public settings_marker_color: Color = Color.default_color();
     public settings_marker_radius: number = 0;
@@ -568,7 +567,7 @@ export class MapState {
         this.zoom = zoom;
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(MapStateChange.VIEW);
+        this.update_observers(MapStateChange.CENTER|MapStateChange.ZOOM);
     }
 
     public set_zoom(zoom: number): void {

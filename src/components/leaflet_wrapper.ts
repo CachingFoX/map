@@ -293,7 +293,7 @@ export class LeafletWrapper extends MapStateObserver {
             this.set_map_type(this.app.map_state.map_type!);
             this.set_german_npa(this.app.map_state.german_npa);
         }
-        if ((changes & MapStateChange.VIEW) !== 0) {
+        if ((changes & (MapStateChange.CENTER|MapStateChange.ZOOM)) !== 0) {
             this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);
         }
 

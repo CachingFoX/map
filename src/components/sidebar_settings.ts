@@ -55,7 +55,7 @@ export class SidebarSettings extends SidebarItem {
             {id: CoordinatesFormat.D, name: "Degrees"},
             {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
             {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"},
-        ].forEach((item: ICoordinatesFormatDict): void => {
+         ].forEach((item: ICoordinatesFormatDict): void => {
             this.coordinates_format_select.append(
                 new Option(
                     item.name,
@@ -109,7 +109,7 @@ export class SidebarSettings extends SidebarItem {
                 "n/a" :
                 this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
         }
-        if (changes & (MapStateChange.LINES | MapStateChange.VIEW | MapStateChange.CENTER | MapStateChange.ZOOM)) {
+        if (changes & (MapStateChange.LINES | MapStateChange.CENTER | MapStateChange.ZOOM)) {
             this.units_format_select.value = this.app.map_state.settings_line_distance_format;
             
             var d = this.app.leaflet.distance_swne();
