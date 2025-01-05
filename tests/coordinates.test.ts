@@ -373,3 +373,19 @@ describe('stringify coordinates', () => {
         expect(pointZero.to_string_DMS()).toBe("N 00° 00' 00.00\" E 000° 00' 00.00\"");
     });
 });
+
+describe('parse Reverse Wherigo coordinates', () => {
+    it('sanitize_string', () => {
+        let input = "261180 536802 118040";
+        let expected = input;
+        let actual = Coordinates.sanitize_string(input);
+
+        expect(actual).toBe(expected)
+    });
+    it('from_string', () => {
+        let input = "261180 536802 118040";
+        let expected = input;
+        let actual = Coordinates.from_string(input);
+        expect(actual).toStrictEqual(new Coordinates(50.11042, 8.68213));
+    });
+});

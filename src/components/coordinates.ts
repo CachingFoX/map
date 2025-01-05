@@ -152,9 +152,65 @@ export class Coordinates {
         return new Coordinates(lat, lng);
     }
 
+    public static from_reverse_wherigo(varA: number, varB: number, varC: number) : Coordinates | null {
+        let latSign = 1.0;
+        let lonSign = 1.0;
+        let lonValue = 0.0;
+        let latValue = 0.0;
+
+        if ((varA % 1000 - varA % 100) / 100 == 1) {
+            latSign = 1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 2) {
+            latSign = -1;
+            lonSign = 1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 3) {
+            latSign = 1;
+            lonSign = -1;
+        }
+        else if ((varA % 1000 - varA % 100) / 100 == 4) {
+            latSign = -1;
+            lonSign = -1;
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0) {
+            // A4 B2  B5 C3 A6 C2 A1
+            latValue = Number(((varA % 10000 - varA % 1000) / 1000 * 10 + (varB % 100 - varB % 10) / 10 + (varB % 100000 - varB % 10000) / 10000 * 0.1 + (varC % 1000 - varC % 100) / 100 * 0.01 + (varA % 1000000 - varA % 100000) / 100000 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + varA % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0) {
+            // B6 A1   A4 C6 C3 C2 A6
+            latValue = Number(((varB % 1000000 - varB % 100000) / 100000 * 10 + varA % 10 + (varA % 10000 - varA % 1000) / 1000 * 0.1 + (varC % 1000000 - varC % 100000) / 100000 * 0.01 + (varC % 1000 - varC % 100) / 100 * 0.001 + (varC % 100 - varC % 10) / 10 * 1.0E-4 + (varA % 1000000 - varA % 100000) / 100000 * 1.0E-5))
+        }
+      
+        if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 === 0 ) {
+            // A5 C6  C1 B3 B6 A2
+            lonValue = Number(((varA % 100000 - varA % 10000) / 10000 * 100 + (varC % 1000000 - varC % 100000) / 100000 * 10 + varC % 10 + (varB % 1000 - varB % 100) / 100 * 0.1 + (varB % 1000000 - varB % 100000) / 100000 * 0.01 + (varA % 100 - varA % 10) / 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + varB % 10 * 1.0E-5));
+        }
+        else if ( ((varC % 100000 - varC % 10000) / 10000 + (varC % 100 - varC % 10) / 10) % 2 !== 0 ) {
+            // B2 C1 A2  A5 B3 B1 ??
+            lonValue = Number(((varB % 100 - varB % 10) / 10 * 100 + varC % 10 * 10 + (varA % 100 - varA % 10) / 10 + (varA % 100000 - varA % 10000) / 10000 * 0.1 + (varB % 1000 - varB % 100) / 100 * 0.01 + varB % 10 * 0.001 + (varC % 100000 - varC % 10000) / 10000 * 1.0E-4 + (varB % 100000 - varB % 10000) / 10000 * 1.0E-5));
+        }
+      
+        latValue = latSign * latValue;
+        lonValue = lonSign * lonValue;
+
+        return new Coordinates(latValue,lonValue)
+    }
+
     public static from_string(str: string): Coordinates | null {
         const s = Coordinates.sanitize_string(str);
 
+        // factory method for Reverse Wherigo coordinates
+        const read_reverse_wherigo = (m: RegExpMatchArray, p: any) : Coordinates | null => {
+            let a = parseInt(m[1]);
+            let b = parseInt(m[2]);
+            let c = parseInt(m[3]);
+            return Coordinates.from_reverse_wherigo(a, b, c)
+        };
+
+        // factory method for all kind of WGS coordinates
         const read_DMS_groups = (m: RegExpMatchArray, p: any) : Coordinates | null => {
             const extract_hemisphere = (match: RegExpMatchArray, index: string | number): string => {
                 if (typeof index === "number") {
@@ -172,14 +228,14 @@ export class Coordinates {
                 return 0;
             };
             const c = Coordinates.from_components(
-                extract_hemisphere(m, p.fields[0]),
-                extract_component(m, p.fields[1] as number),
-                extract_component(m, p.fields[2] as number),
-                extract_component(m, p.fields[3] as number),
-                extract_hemisphere(m, p.fields[4]),
-                extract_component(m, p.fields[5] as number),
-                extract_component(m, p.fields[6] as number),
-                extract_component(m, p.fields[7] as number),
+                extract_hemisphere(m, p.groups[0]),
+                extract_component(m, p.groups[1] as number),
+                extract_component(m, p.groups[2] as number),
+                extract_component(m, p.groups[3] as number),
+                extract_hemisphere(m, p.groups[4]),
+                extract_component(m, p.groups[5] as number),
+                extract_component(m, p.groups[6] as number),
+                extract_component(m, p.groups[7] as number),
             );
             return c
         }
@@ -188,69 +244,74 @@ export class Coordinates {
             // DMM / H D M (prefix hemisphere)
             {
                 regexp: /^([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
-                fields: [1, 2, 3, 0, 4, 5, 6, 0],
+                groups: [1, 2, 3, 0, 4, 5, 6, 0],
                 factory: read_DMS_groups,
             },
             // DMM / D H M (semi-postfix hemisphere)
             {
                 regexp: /^(\d+) ?([NEWS]) ?(\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+\.?\d*)$/,
-                fields: [2, 1, 3, 0, 5, 4, 6, 0],
+                groups: [2, 1, 3, 0, 5, 4, 6, 0],
                 factory: read_DMS_groups,
             },
             // DMM / D M H (postfix hemisphere)
             {
                 regexp: /^(\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+\.?\d*) ?([NEWS])$/,
-                fields: [3, 1, 2, 0, 6, 4, 5, 0],
+                groups: [3, 1, 2, 0, 6, 4, 5, 0],
                 factory: read_DMS_groups,
             },
             // DMM / D M (without hemisphere)
             {
                 regexp: /^(\d+) (\d+\.?\d*) (\d+) (\d+\.?\d*)$/,
-                fields: ["N", 1, 2, 0, "E", 3, 4, 0],
+                groups: ["N", 1, 2, 0, "E", 3, 4, 0],
                 factory: read_DMS_groups,
             },
             // DMS / H D M S (prefix hemisphere)
             {
                 regexp: /^([NEWS]) ?(\d+) (\d+) (\d+\.?\d*) ?([NEWS]) ?(\d+) (\d+) (\d+\.?\d*)$/,
-                fields: [1, 2, 3, 4, 5, 6, 7, 8],
+                groups: [1, 2, 3, 4, 5, 6, 7, 8],
                 factory: read_DMS_groups,
             },
             // DMS / D H M S (semi-postfix hemisphere)
             {
                 regexp: /^(\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*) (\d+) ?([NEWS]) ?(\d+) (\d+\.?\d*)$/,
-                fields: [2, 1, 3, 4, 6, 5, 7, 8],
+                groups: [2, 1, 3, 4, 6, 5, 7, 8],
                 factory: read_DMS_groups,
             },
             // DMS / D M S H (postfix hemisphere)
             {
                 regexp: /^\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*(\d+)\s+(\d+)\s+(\d+\.?\d*)\s*([NEWS])\s*$/,
-                fields: [4, 1, 2, 3, 8, 5, 6, 7],
+                groups: [4, 1, 2, 3, 8, 5, 6, 7],
                 factory: read_DMS_groups,
             },
             // DMS / D M S - without hemisphere
             {
                 regexp: /^(\d+) (\d+) (\d+\.?\d*) (\d+) (\d+) (\d+\.?\d*)$/,
-                fields: ["N", 1, 2, 3, "E", 4, 5, 6],
+                groups: ["N", 1, 2, 3, "E", 4, 5, 6],
                 factory: read_DMS_groups,
             },
             // DEC - prefix hemisphere
             {
                 regexp: /^([NEWS]) ?(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*)$/,
-                fields: [1, 2, 0, 0, 3, 4, 0, 0],
+                groups: [1, 2, 0, 0, 3, 4, 0, 0],
                 factory: read_DMS_groups,
             },
             // DEC - postfix hemisphere
             {
                 regexp: /^(\d+\.?\d*) ?([NEWS]) ?(\d+\.?\d*) ?([NEWS])$/,
-                fields: [2, 1, 0, 0, 4, 3, 0, 0],
+                groups: [2, 1, 0, 0, 4, 3, 0, 0],
                 factory: read_DMS_groups,
             },
             // DEC - without hemisphere
             {
                 regexp: /^(-?\d+\.?\d*) (-?\d+\.?\d*)$/,
-                fields: ["+", 1, 0, 0, "+", 2, 0, 0],
+                groups: ["+", 1, 0, 0, "+", 2, 0, 0],
                 factory: read_DMS_groups,
             },
+            // Reverse Wherigo
+            {
+                regexp: /^(\d+) (\d+) (\d+)$/,
+                factory: read_reverse_wherigo,
+            }
         ];
 
         for (const p of patterns) {
