@@ -15,15 +15,15 @@ export class MarkerSettingsDialog extends Dialog {
 
         const format = this._div.querySelector("[data-coordinates-format]")!;
         [
-            {id: CoordinatesFormat.D, name: "Degrees"},
-            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
-            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"},
+            {id: CoordinatesFormat.DEC, name: "H DD.DDDDDD°"},
+            {id: CoordinatesFormat.DMM, name: "H DD° MM.MMM'"},
+            {id: CoordinatesFormat.DMS, name: "H DD° MM' SS.SS\""},
         ].forEach((item: ICoordinatesFormatDict): void => {
             format.append(
                 new Option(
                     item.name,
                     item.id,
-                    item.id === CoordinatesFormat.DM,
+                    item.id === CoordinatesFormat.DMM,
                     item.id === this._app.map_state.settings_marker_coordinates_format,
                 ),
             );

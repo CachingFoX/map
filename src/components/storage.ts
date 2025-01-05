@@ -70,13 +70,13 @@ export class Storage {
         }
 
         // CoordinatesFormat
-        let coordinates_format = CoordinatesFormat.DM;
+        let coordinates_format = CoordinatesFormat.DMM;
         switch (this.get("coordinatesFormat", null)) {
             case "D":
-                coordinates_format = CoordinatesFormat.D;
+                coordinates_format = CoordinatesFormat.DEC;
                 break;
             case "DM":
-                coordinates_format = CoordinatesFormat.DM;
+                coordinates_format = CoordinatesFormat.DMM;
                 break;
             case "DMS":
                 coordinates_format = CoordinatesFormat.DMS;

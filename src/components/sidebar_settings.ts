@@ -52,21 +52,23 @@ export class SidebarSettings extends SidebarItem {
 
         this.coordinates_format_select = this._div.querySelector("[data-coordinates-format]")!;
         [
-            {id: CoordinatesFormat.D, name: "Degrees"},
-            {id: CoordinatesFormat.DM, name: "Degrees+Minutes"},
-            {id: CoordinatesFormat.DMS, name: "Degrees+Minutes+Seconds"},
-         ].forEach((item: ICoordinatesFormatDict): void => {
+            {id: CoordinatesFormat.DEC, name: "H DDD.DDDDDD°"},
+            {id: CoordinatesFormat.DMM, name: "H DDD° MM.MMM'"},
+            {id: CoordinatesFormat.DMS, name: "H DDD° MM' SS.SS\""},
+        ].forEach((item: ICoordinatesFormatDict): void => {
             this.coordinates_format_select.append(
                 new Option(
                     item.name,
                     item.id,
-                    item.id === CoordinatesFormat.DM,
+                    item.id === CoordinatesFormat.DMM,
                     item.id === this.app.map_state.settings_marker_coordinates_format,
                 ),
             );
         });
         this.coordinates_format_select.onchange = (): void => {
-            this.app.map_state.set_coordinates_format(parseCoordinatesFormat(this.coordinates_format_select.value, CoordinatesFormat.DM));
+            this.app.map_state.set_coordinates_format(
+                parseCoordinatesFormat(this.coordinates_format_select.value, CoordinatesFormat.DMM)
+            );
         };
 
         this.units_format_select = this._div.querySelector("[data-distance-format]")!;
@@ -99,19 +101,25 @@ export class SidebarSettings extends SidebarItem {
         //    return;
         // }
 
+        // language
         if (changes & MapStateChange.LANGUAGE) {
             this.language_select.value = this.app.map_state.language;
         }
+        
+        // coordinates format
         if (changes & (MapStateChange.MARKERS | MapStateChange.CENTER)) {
             this.coordinates_format_select.value = this.app.map_state.settings_marker_coordinates_format;
+            // show an example of current selected coordinates format
             this.centerField.innerText =
                 (this.app.map_state.center === null) ?
                 "n/a" :
                 this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
         }
+
+        // distance unit
         if (changes & (MapStateChange.LINES | MapStateChange.CENTER | MapStateChange.ZOOM)) {
             this.units_format_select.value = this.app.map_state.settings_line_distance_format;
-            
+            // show an example for the current selected distance unit
             var d = this.app.leaflet.distance_swne();
             var diagonal = `${d.to_string(this.app.map_state.settings_line_distance_format)}`
 
