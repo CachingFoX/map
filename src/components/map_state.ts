@@ -1092,7 +1092,7 @@ export class MapState {
     public to_json(): object {
         const data = {
             maptype: this.map_type,
-            center: this.center!.to_string_D(),
+            center: this.center!.to_string_DEC(),
             zoom: this.zoom,
             german_npa: this.german_npa,
             settings: {

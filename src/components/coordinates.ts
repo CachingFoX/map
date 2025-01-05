@@ -255,16 +255,16 @@ export class Coordinates {
     public to_string(format: string): string {
         switch (format) {
             case CoordinatesFormat.D:
-                return this.to_string_D();
+                return this.to_string_DEC();
             case CoordinatesFormat.DMS:
                 return this.to_string_DMS();
             case CoordinatesFormat.DM:
             default:
-                return this.to_string_DM();
+                return this.to_string_DMM();
         }
     }
 
-    public to_string_DM(): string {
+    public to_string_DMM(): string {
         let lat = Math.abs(this.lat());
         let lat_minutes: number;
         let lat_milli_minutes: number;
@@ -348,7 +348,7 @@ export class Coordinates {
         );
     }
 
-    public to_string_D(): string {
+    public to_string_DEC(): string {
         return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(
             this.lng(),
         ).toFixed(6)}`;
