@@ -654,4 +654,12 @@ export class LeafletWrapper extends MapStateObserver {
 
         return className;
     }
+
+    public distance_swne() : Distance {
+        let bounds : L.LatLngBounds = this.map.getBounds();
+        let ne = bounds.getNorthEast()
+        let sw = bounds.getSouthWest()
+        let d = ne.distanceTo(sw)
+        return new Distance(d, DistanceFormat.m)
+    }
 }

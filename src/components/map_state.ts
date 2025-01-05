@@ -855,6 +855,15 @@ export class MapState {
         }
     }
 
+    public set_coordinates_format(coordinates_format: CoordinatesFormat) : void {
+        this.settings_marker_coordinates_format = coordinates_format;
+        this.storage.set(
+            "settings.marker.coordinates_format",
+            this.settings_marker_coordinates_format,
+        );
+        this.update_observers(MapStateChange.MARKERS)
+    }
+
     public set_default_marker_settings(settings: IMarkerSettingsDict): void {
         this.settings_marker_coordinates_format = settings.coordinates_format;
         this.storage.set(
@@ -895,6 +904,12 @@ export class MapState {
 
     public filled_markers(): boolean {
         return this.settings_marker_filled;
+    }
+
+    public set_distance_format(distance_format: DistanceFormat) : void {
+        this.settings_line_distance_format = distance_format;
+        this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
+        this.update_observers(MapStateChange.LINES);
     }
 
     public set_default_line_settings(settings: ILineSettingsDict): void {
