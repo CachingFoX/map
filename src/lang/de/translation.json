@@ -198,6 +198,10 @@
                 "import-json": "Importiere Karten-Zustand",
                 "language": "Sprache",
                 "title": "Werkzeuge"
+            },
+            "settings": {
+                "language": "Sprache",
+                "title": "Einstellungen"
             }
         }
     }

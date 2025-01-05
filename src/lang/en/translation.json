@@ -198,6 +198,10 @@
                 "import-json": "Import Map State",
                 "language": "Language",
                 "title": "Tools"
+            },
+            "settings": {
+                "language": "Language",
+                "title": "Settings"
             }
         }
     }

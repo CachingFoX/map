@@ -198,6 +198,10 @@
                 "import-json": "Importer l'\u00e9tat de la carte",
                 "language": "Langue",
                 "title": "Outils"
+            },
+            "settings": {
+                "language": "Langue",
+                "title": "Param\u00e8tres"
             }
         }
     }

@@ -214,16 +214,6 @@
 
             <div class="sidebar-container" id="sidebar-tools">
                 <div class="scrollable-content content">
-                    <div class="field">
-                        <label class="label" data-i18n="sidebar.tools.language">Language</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select data-language></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
 
                     <div class="field">
                         <div class="control">
@@ -282,6 +272,47 @@
                         </div>
                         <p class="help" data-i18n="sidebar.tools.create-markers-help">Create multiple markers at once, i.e. by providing a list of coordinates.</p>
                     </div>
+                </div>
+            </div>
+
+            <div class="sidebar-container" id="sidebar-settings">
+                <div class="scrollable-content content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.settings.language">Language</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-language></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" data-i18n="dialog.marker-settings.coordinates-format">Coordinates Display Format</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-coordinates-format></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="help">
+                        <span data-i18n="sidebar.search.center-title">Center of the map: </span>
+                        <span id="sidebar-settings-center">CENTER</span>
+                    </p>
+                    
+                    <div class="field">
+                        <label class="label" data-i18n="dialog.line-settings.distance-format"></label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select data-distance-format></select>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="help">
+                        <span data-xi18n="sidebar.settings.map-diagonale">Kartendiagonale: </span>
+                        <span id="sidebar-settings-distance">???</span>
+                    </p>
+                    
                 </div>
             </div>
 
