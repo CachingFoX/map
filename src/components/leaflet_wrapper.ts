@@ -44,6 +44,9 @@ export class LeafletWrapper extends MapStateObserver {
     private readonly layer_stamen_terrain: L.TileLayer;
     private readonly layer_humanitarian: L.TileLayer;
     private readonly layer_arcgis_worldimagery: L.TileLayer;
+    private readonly layer_google_maps: L.TileLayer;
+    private readonly layer_google_satellite: L.TileLayer;
+    private readonly layer_google_hybrid: L.TileLayer;
     private readonly layers: Map<string, L.TileLayer>;
     private readonly midpoint_icon_css_classes: Map<string, string>;
     private readonly styles: HTMLStyleElement;
@@ -113,6 +116,33 @@ export class LeafletWrapper extends MapStateObserver {
             },
         );
 
+        this.layer_google_maps = L.tileLayer(
+            "http://mt.google.com/vt?x={x}&y={y}&z={z}",
+            {
+                attribution: "",
+                maxNativeZoom: 20,
+                maxZoom: 20,
+            }
+        );
+
+        this.layer_google_satellite = L.tileLayer(
+            "http://mt.google.com/vt?lyrs=s&x={x}&y={y}&z={z}",
+            {
+                attribution: "",
+                maxNativeZoom: 20,
+                maxZoom: 20,
+            }
+        );
+
+        this.layer_google_hybrid = L.tileLayer(
+            "http://mt0.google.com/vt/lyrs=s,m@110&hl=en&x={x}&y={y}&z={z}",
+            {
+                attribution: "",
+                maxNativeZoom: 20,
+                maxZoom: 20,
+            }
+        );
+
         this.layers = new Map();
         this.layers.set(MapType.OPENSTREETMAP, this.layer_openstreetmap);
         this.layers.set(MapType.OPENTOPOMAP, this.layer_opentopomap);
@@ -120,6 +150,9 @@ export class LeafletWrapper extends MapStateObserver {
         this.layers.set(MapType.HUMANITARIAN, this.layer_humanitarian);
         this.layers.set(MapType.ARCGIS_WORLDIMAGERY, this.layer_arcgis_worldimagery);
         this.layers.set(MapType.ARCGIS_WORLDIMAGERY_OVERLAY, this.layer_arcgis_worldimagery);
+        this.layers.set(MapType.GOOGLE_MAPS, this.layer_google_maps);
+        this.layers.set(MapType.GOOGLE_SATELLITE, this.layer_google_satellite);
+        this.layers.set(MapType.GOOGLE_HYBRID, this.layer_google_hybrid);
 
         ["zoom", "move"].forEach((event_name: string): void => {
             this.map.on(event_name, (): void => {

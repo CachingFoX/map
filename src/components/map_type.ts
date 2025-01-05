@@ -5,6 +5,9 @@ export enum MapType {
     HUMANITARIAN = "HUMANITARIAN",
     ARCGIS_WORLDIMAGERY = "ARCGIS_WORLDIMAGERY",
     ARCGIS_WORLDIMAGERY_OVERLAY = "ARCGIS_WORLDIMAGERY_OVERLAY",
+    GOOGLE_MAPS = "GOOGLE_MAPS",
+    GOOGLE_SATELLITE = "GOOGLE_SAT",
+    GOOGLE_HYBRID = "GOOGLE_HYBRID",
 }
 
 export const maptype2string = String;
@@ -23,6 +26,12 @@ export const string2maptype = (s: string): MapType | null => {
             return MapType.ARCGIS_WORLDIMAGERY;
         case MapType.ARCGIS_WORLDIMAGERY_OVERLAY:
             return MapType.ARCGIS_WORLDIMAGERY_OVERLAY;
+        case MapType.GOOGLE_MAPS:
+            return MapType.GOOGLE_MAPS;
+        case MapType.GOOGLE_SATELLITE:
+            return MapType.GOOGLE_SATELLITE;
+        case MapType.GOOGLE_HYBRID:
+            return MapType.GOOGLE_HYBRID;
         default:
             return null;
     }
@@ -42,6 +51,12 @@ export const maptype2human = (t: MapType | null): string => {
             return "World Imagery";
         case MapType.ARCGIS_WORLDIMAGERY_OVERLAY:
             return "World Imagery + Overlay";
+        case MapType.GOOGLE_MAPS:
+            return "Google Maps";
+        case MapType.GOOGLE_SATELLITE:
+            return "Google Satellite";
+        case MapType.GOOGLE_HYBRID:
+            return "Google Hybrid";
         default:
             return "Unknown";
     }
