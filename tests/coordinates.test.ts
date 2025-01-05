@@ -1,3 +1,4 @@
+import exp from "constants";
 import { Coordinates } from "../src/components/coordinates";
 
 
@@ -8,6 +9,105 @@ describe('What component aspect are you testing?', () => {
 
         expect(actual).toEqual(actual) // matcher
     });
+});
+
+describe('from_components', () => {
+    it('order lat/lng', () => {
+        let expectedNE = new Coordinates(50.11042, 8.68213);
+        let expectedNW = new Coordinates(50.11042, -8.68213);
+        let expectedSE = new Coordinates(-50.11042, 8.68213);
+        let expectedSW = new Coordinates(-50.11042, -8.68213);
+
+        // order latitude/longitude
+        let c = Coordinates.from_components("N", 50.11042, 0, 0, "E", 8.68213, 0, 0);
+        expect(c).toStrictEqual(expectedNE)
+
+        c = Coordinates.from_components("N", 50.11042, 0, 0, "W", 8.68213, 0, 0);
+        expect(c).toStrictEqual(expectedNW)
+
+        c = Coordinates.from_components("S", 50.11042, 0, 0, "E", 8.68213, 0, 0);
+        expect(c).toStrictEqual(expectedSE)
+
+        c = Coordinates.from_components("S", 50.11042, 0, 0, "W", 8.68213, 0, 0);
+        expect(c).toStrictEqual(expectedSW)
+
+        // reverse order longitude/latitude
+        c = Coordinates.from_components("E", 8.68213, 0, 0, "N", 50.11042, 0, 0);
+        expect(c).toStrictEqual(expectedNE)
+
+        c = Coordinates.from_components("E", 8.68213, 0, 0, "S", 50.11042, 0, 0);
+        expect(c).toStrictEqual(expectedSE)
+
+        c = Coordinates.from_components("W", 8.68213, 0, 0, "N", 50.11042, 0, 0);
+        expect(c).toStrictEqual(expectedNW)
+
+        c = Coordinates.from_components("W", 8.68213, 0, 0, "S", 50.11042, 0, 0);
+        expect(c).toStrictEqual(expectedSW)
+    });
+    it('wrong hemisphere order', () => {
+        let c = Coordinates.from_components("N", 50.11042, 0, 0, "N", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("S", 50.11042, 0, 0, "S", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50.11042, 0, 0, "S", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("S", 50.11042, 0, 0, "N", 8.68213, 0, 0);
+        expect(c).toBe(null)
+
+        c = Coordinates.from_components("W", 50.11042, 0, 0, "W", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("E", 50.11042, 0, 0, "E", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("W", 50.11042, 0, 0, "E", 8.68213, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("E", 50.11042, 0, 0, "W", 8.68213, 0, 0);
+        expect(c).toBe(null)
+    });
+    it('mixture of hemisphere and negative (degree values)', () => {
+        // no negative values for degress values if hemisphare sign is given
+        // DMM or DMS expected only positive values
+        let c = Coordinates.from_components("N", -50, 0, 0, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("S", -50, 0, 0, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "E", -8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "W", -8, 0, 0);
+        expect(c).toBe(null)
+
+        // in decimal format negative for decimal is allowed 
+        let expected = new Coordinates(-50.0000000, -8.0000000);
+        c = Coordinates.from_components("+", -50, 0, 0, "+", -8, 0, 0);
+        expect(c).toStrictEqual(expected)
+    });
+    it('check range for minutes and seconds', () => {
+        // negative
+        let c = Coordinates.from_components("N", 50, -10, 0, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, -10, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "E", 8, -10, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "E", 8, 0, -10);
+        expect(c).toBe(null)        
+
+        // to big
+        c = Coordinates.from_components("N", 50, 61, 0, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 61, "E", 8, 0, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "E", 8, 61, 0);
+        expect(c).toBe(null)
+        c = Coordinates.from_components("N", 50, 0, 0, "E", 8, 0, 61);
+        expect(c).toBe(null)          
+    });    
+});
+
+describe('from_string', () => {
+    it('same hemisphere', () => {
+        let c = Coordinates.from_string("N 49 22.797 N 010 59.437")
+        expect(c).toBe(null)
+    })
 });
 
 describe('functions', () => {
