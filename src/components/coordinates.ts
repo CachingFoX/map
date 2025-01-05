@@ -131,12 +131,12 @@ export class Coordinates {
         } else if ((h1 === "N" || h1 === "S") && (h2 === "E" || h2 === "W")) {
             lat = c1;
             lng = c2;
-            if (h1 === "S") {
-                lat = -lat;
-            }
-            if (h2 === "W") {
-                lng = -lng;
-            }
+        if (h1 === "S") {
+            lat = -lat;
+        }
+        if (h2 === "W") {
+            lng = -lng;
+        }
         } else if ((h2 === "N" || h2 === "S") && (h1 === "E" || h1 === "W")) {
             lat = c2;
             lng = c1;
@@ -476,7 +476,7 @@ export class Coordinates {
             if (c === "o" || c === "O") {
                 // Map 'O'/'o' to 'E' (German 'Ost' = 'East')
                 sanitized += "E";
-            } else if (c.match(/[a-z0-9-]/i) !== null) {
+            } else if (c.match(/[nswe0-9-]/i) !== null) {
                 sanitized += c.toUpperCase();
             } else if (c === ".") {
                 periods += 1;
