@@ -204,13 +204,13 @@ describe('parse DMS coordinates', () => {
     it("format DMS - postfix hemisphere", () => {
         let expected = new Coordinates(50.184197338888886, 8.50102281388889);
         let actual = Coordinates.from_string("  50 11 3.11042 N 8 30  3.68213 E");
-        expect(actual).toBe(null);
+        expect(actual).toStrictEqual(expected);
 
         actual = Coordinates.from_string("   50 11 3.11042 N    8 30 3.68213 E ");
-        expect(actual).toBe(null);
+        expect(actual).toStrictEqual(expected);
 
         actual = Coordinates.from_string(" 50 11 3.11042N    ,   8 30 3.68213E ");
-        expect(actual).toBe(null);
+        expect(actual).toStrictEqual(expected);
     });
 
     it("format DMS - semi-postfix hemisphere", () => {
