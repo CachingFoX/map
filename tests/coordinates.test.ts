@@ -342,34 +342,34 @@ describe('parse DMS coordinates', () => {
 describe('stringify coordinates', () => {
     it("to DEC format", () => {
         let pointNE = new Coordinates(5.184197338888886, 8.50102281388889);
-        expect(pointNE.to_string_DEC()).toBe("N 5.184197 E 8.501023");
+        expect(pointNE.to_string_DEC()).toBe("N 05.184197° E 008.501023°");
 
         let pointSW = new Coordinates(-5.184197338888886, -8.50102281388889);
-        expect(pointSW.to_string_DEC()).toBe("S 5.184197 W 8.501023");
+        expect(pointSW.to_string_DEC()).toBe("S 05.184197° W 008.501023°");
 
         let pointZero = new Coordinates(-0.0, -0.0);
-        expect(pointZero.to_string_DEC()).toBe("N 0.000000 E 0.000000");
+        expect(pointZero.to_string_DEC()).toBe("N 00.000000° E 000.000000°");
     });
 
     it("to DMM format", () => {
         let pointNE = new Coordinates(5.184197338888886, 8.50102281388889);
-        expect(pointNE.to_string_DMM()).toBe("N 05 11.052 E 008 30.061");
+        expect(pointNE.to_string_DMM()).toBe("N 05° 11.052' E 008° 30.061'");
 
         let pointSW = new Coordinates(-5.184197338888886, -8.50102281388889);
-        expect(pointSW.to_string_DMM()).toBe("S 05 11.052 W 008 30.061");
+        expect(pointSW.to_string_DMM()).toBe("S 05° 11.052' W 008° 30.061'");
 
         let pointZero = new Coordinates(-0.0, -0.0);
-        expect(pointZero.to_string_DMM()).toBe("N 00 00.000 E 000 00.000");
+        expect(pointZero.to_string_DMM()).toBe("N 00° 00.000' E 000° 00.000'");
     });
 
-    it("to DMM format", () => {
+    it("to DMS format", () => {
         let pointNE = new Coordinates(5.184197338888886, 8.50102281388889);
-        expect(pointNE.to_string_DMS()).toBe("N 05 11 03.11 E 008 30 03.68");
+        expect(pointNE.to_string_DMS()).toBe("N 05° 11' 03.11\" E 008° 30' 03.68\"");
 
         let pointSW = new Coordinates(-5.184197338888886, -8.50102281388889);
-        expect(pointSW.to_string_DMS()).toBe("S 05 11 03.11 W 008 30 03.68");
+        expect(pointSW.to_string_DMS()).toBe("S 05° 11' 03.11\" W 008° 30' 03.68\"");
 
         let pointZero = new Coordinates(-0.0, -0.0);
-        expect(pointZero.to_string_DMS()).toBe("N 00 00 00.00 E 000 00 00.00");
+        expect(pointZero.to_string_DMS()).toBe("N 00° 00' 00.00\" E 000° 00' 00.00\"");
     });
 });

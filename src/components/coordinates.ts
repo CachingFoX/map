@@ -296,18 +296,19 @@ export class Coordinates {
             this.NS() +
             " " +
             pad(lat_deg, 2) +
-            " " +
+            "° " +
             pad(lat_minutes, 2) +
             "." +
             pad(lat_milli_minutes, 3) +
-            " " +
+            "' " +
             this.EW() +
             " " +
             pad(lng_deg, 3) +
-            " " +
+            "° " +
             pad(lng_minutes, 2) +
             "." +
-            pad(lng_milli_minutes, 3)
+            pad(lng_milli_minutes, 3) +
+            "'"
         );
     }
 
@@ -332,25 +333,26 @@ export class Coordinates {
             this.NS() +
             " " +
             pad(lat_deg, 2) +
-            " " +
+            "° " +
             pad(lat_minutes, 2) +
-            " " +
+            "' " +
             pad(lat_seconds.toFixed(2), 5) +
-            " " +
+            "\" " +
             this.EW() +
             " " +
             pad(lng_deg, 3) +
-            " " +
+            "° " +
             pad(lng_minutes, 2) +
-            " " +
-            pad(lng_seconds.toFixed(2), 5)
+            "' " +
+            pad(lng_seconds.toFixed(2), 5) +
+            "\""
         );
     }
 
     public to_string_DEC(): string {
-        return `${this.NS()} ${Math.abs(this.lat()).toFixed(6)} ${this.EW()} ${Math.abs(
-            this.lng(),
-        ).toFixed(6)}`;
+        let lat = pad(Math.abs(this.lat()).toFixed(6),9);
+        let lng = pad(Math.abs(this.lng()).toFixed(6),10);
+        return `${this.NS()} ${lat}° ${this.EW()} ${lng}°`;
     }
 
     public distance(other: Coordinates): number {
