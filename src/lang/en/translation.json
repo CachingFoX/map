@@ -200,8 +200,12 @@
                 "title": "Tools"
             },
             "settings": {
+                "title": "Settings",
                 "language": "Language",
-                "title": "Settings"
+                "coordinates-format": "Coordinates Format",
+                "coordinates-format-help": "Center of the Map",
+                "distance-unit": "Distance Units",
+                "distance-unit-help": "Map diagonal"
             }
         }
     }

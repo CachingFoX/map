@@ -200,8 +200,12 @@
                 "title": "Outils"
             },
             "settings": {
+                "title": "Param\u00e8tres",
                 "language": "Langue",
-                "title": "Param\u00e8tres"
+                "coordinates-format": "Format des coordonn\u00e9es",
+                "coordinates-format-help": "Centre de la carte",
+                "distance-unit": "Unit\u00e9s de distance",
+                "distance-unit-help": "Diagonale de la carte"
             }
         }
     }
