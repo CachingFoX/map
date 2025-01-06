@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
-import {Distance, DistanceFormat} from "./distance";
+import {Distance, DistanceUnit} from "./distance";
 import {Line} from "./line";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
@@ -577,7 +577,7 @@ export class LeafletWrapper extends MapStateObserver {
             // Compute midpoint
             const dist_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
             if (dist_bearing.distance > 0) {
-                midpoint_text = (new Distance(dist_bearing.distance, DistanceFormat.m)).to_string(this.app.map_state.settings_line_distance_format);
+                midpoint_text = (new Distance(dist_bearing.distance, DistanceUnit.m)).to_string(this.app.map_state.settings_distance_unit);
                 midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2);
             }
         }
@@ -660,6 +660,6 @@ export class LeafletWrapper extends MapStateObserver {
         let ne = bounds.getNorthEast()
         let sw = bounds.getSouthWest()
         let d = ne.distanceTo(sw)
-        return new Distance(d, DistanceFormat.m)
+        return new Distance(d, DistanceUnit.m)
     }
 }

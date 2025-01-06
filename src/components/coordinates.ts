@@ -2,8 +2,8 @@
 import {Geodesic} from "geographiclib-geodesic";
 
 export enum CoordinatesFormat {
-    DEC = "D",
-    DMM = "DM",
+    DEC = "DEC",
+    DMM = "DMM",
     DMS = "DMS",
 }
 
@@ -13,8 +13,10 @@ export const parseCoordinatesFormat = (
 ): CoordinatesFormat => {
     switch (value.toUpperCase()) {
         case "D":
+        case "DEC":
             return CoordinatesFormat.DEC;
         case "DM":
+        case "DMM":
             return CoordinatesFormat.DMM;
         case "DMS":
             return CoordinatesFormat.DMS;

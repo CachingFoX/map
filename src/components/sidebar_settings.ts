@@ -3,7 +3,7 @@ import {MapState, MapStateChange} from "./map_state";
 import {SidebarItem} from "./sidebar_item";
 import {create_element} from "./utilities";
 import {CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
-import {Distance, DistanceFormat, parseDistanceFormat} from "./distance";
+import {Distance, DistanceUnit, parseDistanceFormat} from "./distance";
 
 interface ICoordinatesFormatDict {
     id: string;
@@ -11,7 +11,7 @@ interface ICoordinatesFormatDict {
 }
 
 interface IDistanceFormatDict {
-    id: DistanceFormat;
+    id: DistanceUnit;
     name: string;
 }
 
@@ -61,7 +61,7 @@ export class SidebarSettings extends SidebarItem {
                     item.name,
                     item.id,
                     item.id === CoordinatesFormat.DMM,
-                    item.id === this.app.map_state.settings_marker_coordinates_format,
+                    item.id === this.app.map_state.settings_coordinates_format,
                 ),
             );
         });
@@ -73,22 +73,22 @@ export class SidebarSettings extends SidebarItem {
 
         this.units_format_select = this._div.querySelector("[data-distance-format]")!;
         [
-            {id: DistanceFormat.m, name: "m"},
-            {id: DistanceFormat.km, name: "km"},
-            {id: DistanceFormat.ft, name: "ft"},
-            {id: DistanceFormat.mi, name: "mi"},
+            {id: DistanceUnit.m, name: "m"},
+            {id: DistanceUnit.km, name: "km"},
+            {id: DistanceUnit.ft, name: "ft"},
+            {id: DistanceUnit.mi, name: "mi"},
         ].forEach((item: IDistanceFormatDict): void => {
             this.units_format_select.append(
                 new Option(
                     item.name,
                     item.id,
-                    item.id === DistanceFormat.m,
-                    item.id === this.app.map_state.settings_line_distance_format,
+                    item.id === DistanceUnit.m,
+                    item.id === this.app.map_state.settings_distance_unit,
                 ),
             );
         });
         this.units_format_select.onchange = (): void => {
-            this.app.map_state.set_distance_format(parseDistanceFormat(this.units_format_select.value, DistanceFormat.m))
+            this.app.map_state.set_distance_unit(parseDistanceFormat(this.units_format_select.value, DistanceUnit.m))
         };
 
         this.centerField = this._div.querySelector("#sidebar-settings-center")!;
@@ -108,25 +108,25 @@ export class SidebarSettings extends SidebarItem {
         
         // coordinates format
         if (changes & (MapStateChange.MARKERS | MapStateChange.CENTER)) {
-            this.coordinates_format_select.value = this.app.map_state.settings_marker_coordinates_format;
+            this.coordinates_format_select.value = this.app.map_state.settings_coordinates_format;
             // show an example of current selected coordinates format
             this.centerField.innerText =
                 (this.app.map_state.center === null) ?
                 "n/a" :
-                this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
+                this.app.map_state.center.to_string(this.app.map_state.settings_coordinates_format);
         }
 
         // distance unit
         if (changes & (MapStateChange.LINES | MapStateChange.CENTER | MapStateChange.ZOOM)) {
-            this.units_format_select.value = this.app.map_state.settings_line_distance_format;
+            this.units_format_select.value = this.app.map_state.settings_distance_unit;
             // show an example for the current selected distance unit
             var d = this.app.leaflet.distance_swne();
-            var diagonal = `${d.to_string(this.app.map_state.settings_line_distance_format)}`
+            var diagonal = `${d.to_string(this.app.map_state.settings_distance_unit)}`
 
-            if (this.app.map_state.settings_line_distance_format != DistanceFormat.m && this.app.map_state.settings_line_distance_format != DistanceFormat.km) {
-                var metric = d.to_string(DistanceFormat.m);
+            if (this.app.map_state.settings_distance_unit != DistanceUnit.m && this.app.map_state.settings_distance_unit != DistanceUnit.km) {
+                var metric = d.to_string(DistanceUnit.m);
                 if (d.m() >= 100000) {
-                    metric = d.to_string(DistanceFormat.km)
+                    metric = d.to_string(DistanceUnit.km)
                 }
                 diagonal += ` (${metric})` 
             }

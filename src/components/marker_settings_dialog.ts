@@ -24,7 +24,7 @@ export class MarkerSettingsDialog extends Dialog {
                     item.name,
                     item.id,
                     item.id === CoordinatesFormat.DMM,
-                    item.id === this._app.map_state.settings_marker_coordinates_format,
+                    item.id === this._app.map_state.settings_coordinates_format,
                 ),
             );
         });
@@ -39,7 +39,7 @@ export class MarkerSettingsDialog extends Dialog {
         const radius_input = this._div.querySelector("[data-radius]") as HTMLInputElement;
         const filled_input = this._div.querySelector("[data-filled]") as HTMLInputElement;
         
-        coordinates_input.value = this._app.map_state.settings_marker_coordinates_format;
+        coordinates_input.value = this._app.map_state.settings_coordinates_format;
         random_input.checked = this._app.map_state.settings_marker_random_color;
         color_input.value = this._app.map_state.settings_marker_color.to_hash_string();
         radius_input.value = String(this._app.map_state.settings_marker_radius);
