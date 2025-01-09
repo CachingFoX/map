@@ -1,9 +1,9 @@
-@import 'bulma/css/bulma.css';
+@use 'config.scss' as *;
+@use 'map.scss' as *;
+@use 'notifications.scss' as *;
+@use 'sidebar.scss' as *;
 
-@import 'config.scss';
-@import 'map.scss';
-@import 'notifications.scss';
-@import 'sidebar.scss';
+@import 'bulma/css/bulma.css';
 
 html {
     overflow: hidden;
