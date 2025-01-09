@@ -7,7 +7,6 @@
                 "default-color": "Standardfarbe",
                 "display-distance": "Distanz-Anzeige",
                 "display-distance-text": "Zeige die L\u00e4nge jeder Linie direkt in der Karte an",
-                "distance-format": "Distanzeinheiten",
                 "random-colors": "Zuf\u00e4llige Farbe",
                 "title": "Linieneinstellungen"
             },

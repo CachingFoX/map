@@ -29,7 +29,6 @@ interface IMarkerSettingsDict {
     filled: boolean;
 }
 interface ILineSettingsDict {
-    distance_unit: DistanceUnit;
     random_color: boolean;
     color: Color;
 }
@@ -185,11 +184,12 @@ export class MapState {
             this.storage.get("settings.distance_unit", "")!,
             this.settings_distance_unit,
         );
+        this.set_distance_unit(distance_unit);
         this.set_default_line_settings({
-            distance_unit: distance_unit,
             random_color: this.storage.get_bool("settings.line.random_color", true),
             color: this.storage.get_color("settings.line.color", new Color("FF0000")),
         });
+        
 
         this.set_display_distance(this.storage.get_bool("settings.line.display_distance", true));
 
@@ -912,9 +912,6 @@ export class MapState {
     }
 
     public set_default_line_settings(settings: ILineSettingsDict): void {
-        this.settings_distance_unit = settings.distance_unit;
-        this.storage.set("settings.distance_unit", this.settings_distance_unit);
-
         this.settings_line_random_color = settings.random_color;
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
 
