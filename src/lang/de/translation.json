@@ -151,7 +151,7 @@
                 "delete_all": "L\u00f6sche alle Marker",
                 "delete_all_question": "Willst du wirklich alle Marker l\u00f6schen?",
                 "draggable": "Verschiebbare Marker",
-                "draggable-help": "Marker können auf der Karte per Maus oder Touch verschoben werden.",
+                "draggable-help": "Marker k\u00f6nnen auf der Karte per Maus oder Touch verschoben werden.",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
@@ -180,12 +180,12 @@
                 "title": "Suche"
             },
             "settings": {
-                "title": "Einstellungen",
                 "coordinates-format": "Koordinatenformat",
                 "coordinates-format-help": "Mitte der Karte",
                 "distance-unit": "Distanzeinheiten",
                 "distance-unit-help": "Kartendiagonale",
-                "language": "Sprache"
+                "language": "Sprache",
+                "title": "Einstellungen"
             },
             "tools": {
                 "create-link": "Erzeuge Link",
@@ -197,9 +197,9 @@
                 "export-json": "Exportiere Karten-Zustand",
                 "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
                 "import-gpx": "Importiere GPX",
+                "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
                 "import-gpx-keep": "Importiere GPX; behalte Zustand",
                 "import-gpx-keep-help": "Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Behalte existierende Marker/Linien.",
-                "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
                 "import-gpx-markers": "{1} Marker gefunden, {2} Linien gefunden ({3} ignorierte Waypoints, {4} ignorierte Tracks)",
                 "import-json": "Importiere Karten-Zustand",
                 "title": "Werkzeuge"
