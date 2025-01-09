@@ -179,6 +179,14 @@
                 "search-placeholder": "Ort",
                 "title": "Suche"
             },
+            "settings": {
+                "title": "Einstellungen",
+                "coordinates-format": "Koordinatenformat",
+                "coordinates-format-help": "Mitte der Karte",
+                "distance-unit": "Distanzeinheiten",
+                "distance-unit-help": "Kartendiagonale",
+                "language": "Sprache"
+            },
             "tools": {
                 "create-link": "Erzeuge Link",
                 "create-link-help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
@@ -186,25 +194,15 @@
                 "create-markers-help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
                 "export-gpx": "Exportiere GPX",
                 "export-gpx-help": "Exportiere/Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Beim Import werden alle existierenden Marker und Linien gel\u00f6scht.",
-                "import-gpx-keep-help": "Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Behalte existierende Marker/Linien.",
                 "export-json": "Exportiere Karten-Zustand",
                 "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
                 "import-gpx": "Importiere GPX",
                 "import-gpx-keep": "Importiere GPX; behalte Zustand",
+                "import-gpx-keep-help": "Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Behalte existierende Marker/Linien.",
                 "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
                 "import-gpx-markers": "{1} Marker gefunden, {2} Linien gefunden ({3} ignorierte Waypoints, {4} ignorierte Tracks)",
-                "import-gpx-no-markers": "Keine Marker und Linien gefunden ({1} ignorierte Waypoints, {2} ignorierte Tracks)",
                 "import-json": "Importiere Karten-Zustand",
-                "language": "Sprache",
                 "title": "Werkzeuge"
-            },
-            "settings": {
-                "title": "Einstellungen",
-                "language": "Sprache",
-                "coordinates-format": "Koordinatenformat",
-                "coordinates-format-help": "Mitte der Karte",
-                "distance-unit": "Distanzeinheiten",
-                "distance-unit-help": "Kartendiagonale"
             }
         }
     }
