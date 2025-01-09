@@ -7,7 +7,6 @@
                 "default-color": "Default Color",
                 "display-distance": "Display Distance",
                 "display-distance-text": "Display the length of each line directly on the map",
-                "distance-format": "Distance Units",
                 "random-colors": "Use Random Colors",
                 "title": "Line Settings"
             },
