@@ -8,6 +8,7 @@ import {SidebarLayers} from "./sidebar_layers";
 import {SidebarLines} from "./sidebar_lines";
 import {SidebarMarkers} from "./sidebar_markers";
 import {SidebarSearch} from "./sidebar_search";
+import {SidebarSettings} from "./sidebar_settings";
 import {SidebarTools} from "./sidebar_tools";
 import {create_element, create_icon} from "./utilities";
 
@@ -29,6 +30,7 @@ export class Sidebar extends MapStateObserver {
         // .translate("sidebar.markers.title")
         // .translate("sidebar.lines.title")
         // .translate("sidebar.tools.title")
+        // .translate("sidebar.settings.title")
         // .translate("sidebar.info.title")
         this._sidebars = new Map();
         [
@@ -38,6 +40,7 @@ export class Sidebar extends MapStateObserver {
             ["markers", "map-pin", (id: string): SidebarItem => new SidebarMarkers(app, id)],
             ["lines", "maximize-2", (id: string): SidebarItem => new SidebarLines(app, id)],
             ["tools", "tool", (id: string): SidebarItem => new SidebarTools(app, id)],
+            ["settings", "settings", (id: string): SidebarItem => new SidebarSettings(app, id)],
             ["info", "help-circle", (id: string): SidebarItem => new SidebarInfo(app, id)],
         ].forEach((value: [string, string, (id: string) => SidebarItem]): void => {
             this._sidebars.set(value[0], [

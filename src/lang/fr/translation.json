@@ -7,7 +7,6 @@
                 "default-color": "Couleur standard",
                 "display-distance": "Indicateur de distance",
                 "display-distance-text": "Affiche la longueur de chaque ligne directement sur la carte",
-                "distance-format": "Unit\u00e9s de distance",
                 "random-colors": "Couleur al\u00e9atoire",
                 "title": "R\u00e9glages de la ligne"
             },
@@ -17,12 +16,11 @@
                 "failed-message": "\u00c9chec de la copie du lien.",
                 "help": "Tu peux partager ce lien avec d'autres personnes afin qu'elles puissent voir ta carte actuelle.",
                 "title": "G\u00e9n\u00e9rer un lien",
-                "too-long": "Le lien est probablement trop long ({1} caractères). Il se peut que les navigateurs ne puissent pas le g\u00e9rer correctement."
+                "too-long": "Le lien est probablement trop long ({1} caract\u00e8res). Il se peut que les navigateurs ne puissent pas le g\u00e9rer correctement."
             },
             "marker-settings": {
                 "apply": "Appliquer",
                 "bad_values_message": "Valeurs non conformes.",
-                "coordinates-format": "Format des coordonn\u00e9es",
                 "default-color": "Couleur standard",
                 "default-radius": "Rayon standard (m)",
                 "default-radius-placeholder": "Rayon",
@@ -151,8 +149,8 @@
                 "delete": "Supprimer",
                 "delete_all": "Supprimer tous les marqueurs",
                 "delete_all_question": "Tu veux vraiment effacer tous les marqueurs ?",
-                "draggable": "Marqueurs déplaçables",
-                "draggable-help": "Les marqueurs peuvent être déplacés sur la carte en les faisant glisser avec la souris ou le toucher.",
+                "draggable": "Marqueurs d\u00e9pla\u00e7ables",
+                "draggable-help": "Les marqueurs peuvent \u00eatre d\u00e9plac\u00e9s sur la carte en les faisant glisser avec la souris ou le toucher.",
                 "edit": "Modifier",
                 "edit_color": "Couleur",
                 "edit_color_placeholder": "Couleur",
@@ -180,6 +178,14 @@
                 "search-placeholder": "Lieu",
                 "title": "Chercher"
             },
+            "settings": {
+                "coordinates-format": "Format des coordonn\u00e9es",
+                "coordinates-format-help": "Centre de la carte",
+                "distance-unit": "Unit\u00e9s de distance",
+                "distance-unit-help": "Diagonale de la carte",
+                "language": "Langue",
+                "title": "Param\u00e8tres"
+            },
             "tools": {
                 "create-link": "Cr\u00e9er un lien",
                 "create-link-help": "Cr\u00e9e un lien vers la repr\u00e9sentation cartographique actuelle, par exemple pour la partager avec d'autres.",
@@ -187,16 +193,14 @@
                 "create-markers-help": "Cr\u00e9e plusieurs marqueurs \u00e0 la fois, c'est-\u00e0-dire en indiquant une liste de coordonn\u00e9es.",
                 "export-gpx": "Exportateur GPX",
                 "export-gpx-help": "Exportez/importez les marqueurs (y compris le nom et le rayon) et des lignes au format GPX. Lors de l'importation, tous les marqueurs et lignes existants sont supprim\u00e9s.",
-                "import-gpx-keep-help": "Importer des marqueurs et des lignes à partir d'un fichier GPX, tout en conservant les marqueurs et les lignes existants.",
                 "export-json": "Exporter l'\u00e9tat des cartes",
                 "export-json-help": "Exporte/importe l'\u00e9tat complet de la carte (marqueurs, lignes, etc.) au format JSON.",
                 "import-gpx": "Importer GPX",
-                "import-gpx-keep": "Importation GPX ; maintien de l'\u00e9tat",
                 "import-gpx-bad-file": "Fichier GPX erron\u00e9",
+                "import-gpx-keep": "Importation GPX ; maintien de l'\u00e9tat",
+                "import-gpx-keep-help": "Importer des marqueurs et des lignes \u00e0 partir d'un fichier GPX, tout en conservant les marqueurs et les lignes existants.",
                 "import-gpx-markers": "{1} marqueurs trouv\u00e9s, {2} lignes trouv\u00e9s ({3} waypoints ignor\u00e9es, {4} tracks ignor\u00e9es)",
-                "import-gpx-no-markers": "Pas de marqueurs et de lignes trouv\u00e9s ({1} waypoints ignor\u00e9es, {2} tracks ignor\u00e9es)",
                 "import-json": "Importer l'\u00e9tat de la carte",
-                "language": "Langue",
                 "title": "Outils"
             }
         }

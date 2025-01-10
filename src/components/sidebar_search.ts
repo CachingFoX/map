@@ -36,7 +36,7 @@ export class SidebarSearch extends SidebarItem {
                 return;
             }
             const text = center.to_string(
-                this.app.map_state.settings_marker_coordinates_format,
+                this.app.map_state.settings_coordinates_format,
             );
             this.app.copyClipboard(
                 text,
@@ -60,7 +60,7 @@ export class SidebarSearch extends SidebarItem {
         this.centerField.innerText =
             (this.app.map_state.center === null) ?
             "n/a" :
-            this.app.map_state.center.to_string(this.app.map_state.settings_marker_coordinates_format);
+            this.app.map_state.center.to_string(this.app.map_state.settings_coordinates_format);
     }
 
     public display_results(results: INameCoordinates[]): void {
@@ -114,7 +114,7 @@ export class SidebarSearch extends SidebarItem {
         // Try to parse "location_string" as coordinates
         const coordinates = Coordinates.from_string(location_string);
         if (coordinates !== null) {
-            this.display_results([{name: coordinates.to_string(this.app.map_state.settings_marker_coordinates_format), coordinates}]);
+            this.display_results([{name: coordinates.to_string(this.app.map_state.settings_coordinates_format), coordinates}]);
 
             return;
         }
