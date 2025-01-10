@@ -196,3 +196,20 @@ body.sidebar-open .map-container {
         color: rgba(10, 10, 10, 0.2);
     }
 }
+
+.no-select
+{
+    -webkit-user-select: none; /* Safari and older Chrome */
+    -moz-user-select: none;    /* Older Firefox */
+    -ms-user-select: none;     /* Internet Explorer/Edge */
+    user-select: none;         /* Standard */
+}
+
+.help,
+.label,
+.checkbox *,
+.sidebar-container > .header > h2,
+.modal-card-title, 
+.modal-card-body > p {
+    @extend .no-select;
+}
