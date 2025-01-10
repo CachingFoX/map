@@ -21,7 +21,6 @@
             "marker-settings": {
                 "apply": "Apply",
                 "bad_values_message": "Invalid values.",
-                "coordinates-format": "Coordinates Format",
                 "default-color": "Default Color",
                 "default-radius": "Default Radius (m)",
                 "default-radius-placeholder": "radius",

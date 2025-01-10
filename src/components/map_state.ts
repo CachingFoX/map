@@ -22,7 +22,6 @@ export enum MapStateChange {
 }
 
 interface IMarkerSettingsDict {
-    coordinates_format: CoordinatesFormat;
     random_color: boolean;
     color: Color;
     radius: number;
@@ -170,8 +169,8 @@ export class MapState {
             this.storage.get("settings.coordinates_format", "")!,
             this.settings_coordinates_format,
         );
+        this.set_coordinates_format(coordinates_format)
         this.set_default_marker_settings({
-            coordinates_format,
             random_color: this.storage.get_bool("settings.marker.random_color", true),
             color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
             radius: this.storage.get_float("settings.marker.radius", 0)!,
@@ -864,12 +863,6 @@ export class MapState {
     }
 
     public set_default_marker_settings(settings: IMarkerSettingsDict): void {
-        this.settings_coordinates_format = settings.coordinates_format;
-        this.storage.set(
-            "settings.coordinates_format",
-            this.settings_coordinates_format,
-        );
-
         this.settings_marker_random_color = settings.random_color;
         this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
 

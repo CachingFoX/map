@@ -21,7 +21,6 @@
             "marker-settings": {
                 "apply": "Appliquer",
                 "bad_values_message": "Valeurs non conformes.",
-                "coordinates-format": "Format des coordonn\u00e9es",
                 "default-color": "Couleur standard",
                 "default-radius": "Rayon standard (m)",
                 "default-radius-placeholder": "Rayon",
