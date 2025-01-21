@@ -31,12 +31,17 @@ body {
     display: flex;
     flex-direction: column;
 }
+
 .marker-display {
     align-items: stretch;
     display: flex;
     text-align: left;
     border-bottom: 1px solid #e6e6e6;
     overflow-x: hidden;
+    cursor: pointer;
+}
+.marker-display:hover {
+    background-color: aliceblue;
 }
 .marker-display > .marker-left {
     flex-basis: auto;
@@ -109,6 +114,7 @@ body {
 .edit {
     display: block;
     padding: 8px;
+    border-bottom: 1px solid #e6e6e6;
 }
 
 .drag-handle {

@@ -186,15 +186,20 @@ export class SidebarMarkers extends SidebarItem {
         m.append(left);
 
         const center = create_element("div", ["marker-center"]);
-        center.append(create_element("div", ["marker-name"]));
-        center.append(create_element("div", ["marker-coordinates"]));
-        const circleDiv = create_element("div", ["marker-radius", "is-hidden"]);
+        center.append(create_element("div", ["marker-name", "no-select"]));
+        center.append(create_element("div", ["marker-coordinates", "no-select"]));
+        const circleDiv = create_element("div", ["marker-radius", "no-select", "is-hidden"]);
         const circleDivLabel = create_element("div", ["marker-radius-label"], {"data-i18n": "sidebar.markers.circle"});
         circleDivLabel.innerText = this.app.translate("sidebar.markers.circle");
         circleDiv.append(circleDivLabel);
         circleDiv.append(create_element("div", ["marker-radius-value"]));
         center.append(circleDiv);
         m.append(center);
+
+        m.addEventListener("click", (event) => {
+            this.app.map_state.set_center(marker.coordinates);
+            event.stopPropagation();
+        });
 
         const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
         // .translate("sidebar.markers.show")
