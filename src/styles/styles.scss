@@ -88,6 +88,10 @@ body {
     display: flex;
     text-align: left;
     border-bottom: 1px solid #e6e6e6;
+    cursor: pointer;
+}
+.line:hover {
+    background-color: aliceblue;
 }
 .line > .line-left {
     flex-basis: auto;

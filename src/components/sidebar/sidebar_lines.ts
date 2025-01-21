@@ -182,8 +182,13 @@ export class SidebarLines extends SidebarItem {
         };
         center.append(from.div);
         center.append(to.div);
-        center.append(create_element("div", ["line-stats"]));
+        center.append(create_element("div", ["line-stats", "no-select"]));
         div.append(center);
+
+        div.addEventListener("click", (event) => {
+            this.app.map_state.show_line(line);
+            event.stopPropagation();
+        });
 
         const buttons = create_element("div", ["action-buttons", "buttons", "has-addons"]);
         // .translate("sidebar.lines.show")
