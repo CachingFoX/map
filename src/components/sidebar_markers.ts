@@ -79,7 +79,7 @@ export class SidebarMarkers extends SidebarItem {
         ) as HTMLElement).style.backgroundColor = marker.color.to_hash_string();
         display_div.querySelector(".marker-name")!.textContent = marker.name;
         display_div.querySelector(".marker-coordinates")!.textContent = marker.coordinates.to_string(
-            this.app.map_state.settings_marker_coordinates_format,
+            this.app.map_state.settings_coordinates_format,
         );
         const circleDiv = display_div.querySelector(".marker-radius")!;
         if (marker.radius > 0) {
@@ -205,7 +205,7 @@ export class SidebarMarkers extends SidebarItem {
         // .translate("sidebar.markers.copy_coordinates")
         const button_copy = create_icon_button("copy", "sidebar.markers.copy_coordinates", ["is-info", "is-small"], ["icon16"], (event: Event) => {
             const text = marker.coordinates.to_string(
-                this.app.map_state.settings_marker_coordinates_format,
+                this.app.map_state.settings_coordinates_format,
             );
             this.app.copyClipboard(
                 text,
@@ -295,7 +295,7 @@ export class SidebarMarkers extends SidebarItem {
         (div.querySelector(
             "[data-coordinates]",
         ) as HTMLInputElement).value = marker.coordinates.to_string(
-            this.app.map_state.settings_marker_coordinates_format,
+            this.app.map_state.settings_coordinates_format,
         );
         (div.querySelector("[data-radius]") as HTMLInputElement).value = String(marker.radius);
         (div.querySelector(

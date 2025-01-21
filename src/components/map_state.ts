@@ -1,7 +1,7 @@
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates, CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
-import {Distance, DistanceFormat, parseDistanceFormat} from "./distance";
+import {Distance, DistanceUnit, parseDistanceFormat} from "./distance";
 import {ILineJson, Line} from "./line";
 import {MapStateObserver} from "./map_state_observer";
 import {MapType, maptype2string, string2maptype} from "./map_type";
@@ -15,7 +15,6 @@ export enum MapStateChange {
     MAPTYPE = 2,
     CENTER = 4,
     ZOOM = 8,
-    VIEW = 12,
     MARKERS = 16,
     LINES = 32,
     LANGUAGE = 64,
@@ -23,14 +22,12 @@ export enum MapStateChange {
 }
 
 interface IMarkerSettingsDict {
-    coordinates_format: CoordinatesFormat;
     random_color: boolean;
     color: Color;
     radius: number;
     filled: boolean;
 }
 interface ILineSettingsDict {
-    distance_format: DistanceFormat;
     random_color: boolean;
     color: Color;
 }
@@ -46,13 +43,13 @@ export class MapState {
     public markers_hash: Map<number, Marker>;
     public lines: Line[] = [];
     public lines_hash: Map<number, Line>;
-    public settings_marker_coordinates_format: CoordinatesFormat = CoordinatesFormat.DM;
+    public settings_coordinates_format: CoordinatesFormat = CoordinatesFormat.DMM;
     public settings_marker_random_color: boolean;
     public settings_marker_color: Color = Color.default_color();
     public settings_marker_radius: number = 0;
     public settings_marker_draggable: boolean = false;
     public settings_marker_filled: boolean = true;
-    public settings_line_distance_format: DistanceFormat = DistanceFormat.m;
+    public settings_distance_unit: DistanceUnit = DistanceUnit.m;
     public settings_line_random_color: boolean = true;
     public settings_line_color: Color = Color.default_color();
     public settings_line_display_distance: boolean = true;
@@ -84,8 +81,8 @@ export class MapState {
         });
 
         this.storage.set(
-            "settings.marker.coordinates_format",
-            this.settings_marker_coordinates_format,
+            "settings.coordinates_format",
+            this.settings_coordinates_format,
         );
         this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
         this.storage.set_color("settings.marker.color", this.settings_marker_color);
@@ -93,7 +90,7 @@ export class MapState {
         this.storage.set_bool("settings.marker.draggable", this.settings_marker_draggable);
         this.storage.set_bool("settings.marker.filled", this.settings_marker_filled);
 
-        this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
+        this.storage.set("settings.distance_unit", this.settings_distance_unit);
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
         this.storage.set_color("settings.line.color", this.settings_line_color);
         this.storage.set_bool("settings.line.display_distance", this.settings_line_display_distance);
@@ -169,11 +166,11 @@ export class MapState {
 
         // Settings
         const coordinates_format = parseCoordinatesFormat(
-            this.storage.get("settings.marker.coordinates_format", "")!,
-            this.settings_marker_coordinates_format,
+            this.storage.get("settings.coordinates_format", "")!,
+            this.settings_coordinates_format,
         );
+        this.set_coordinates_format(coordinates_format)
         this.set_default_marker_settings({
-            coordinates_format,
             random_color: this.storage.get_bool("settings.marker.random_color", true),
             color: this.storage.get_color("settings.marker.color", new Color("FF0000")),
             radius: this.storage.get_float("settings.marker.radius", 0)!,
@@ -182,15 +179,16 @@ export class MapState {
         this.set_draggable_markers(this.storage.get_bool("settings.marker.draggable", false));
 
         // Settings
-        const distance_format = parseDistanceFormat(
-            this.storage.get("settings.marker.distance_format", "")!,
-            this.settings_line_distance_format,
+        const distance_unit = parseDistanceFormat(
+            this.storage.get("settings.distance_unit", "")!,
+            this.settings_distance_unit,
         );
+        this.set_distance_unit(distance_unit);
         this.set_default_line_settings({
-            distance_format,
             random_color: this.storage.get_bool("settings.line.random_color", true),
             color: this.storage.get_color("settings.line.color", new Color("FF0000")),
         });
+        
 
         this.set_display_distance(this.storage.get_bool("settings.line.display_distance", true));
 
@@ -222,13 +220,13 @@ export class MapState {
             ok_keys.add(`line[${id}].marker2`);
             ok_keys.add(`line[${id}].color`);
         });
-        ok_keys.add("settings.marker.coordinates_format");
+        ok_keys.add("settings.coordinates_format");
         ok_keys.add("settings.marker.random_color");
         ok_keys.add("settings.marker.color");
         ok_keys.add("settings.marker.radius");
         ok_keys.add("settings.marker.draggable");
         ok_keys.add("settings.marker.filled");
-        ok_keys.add("settings.line.distance_format");
+        ok_keys.add("settings.distance_unit");
         ok_keys.add("settings.line.random_color");
         ok_keys.add("settings.line.color");
         ok_keys.add("settings.line.display_distance");
@@ -492,10 +490,10 @@ export class MapState {
                 const db = marker1.coordinates.distance_bearing(marker2.coordinates);
                 if (line.length === null) {
                     changed = true;
-                    line.length = new Distance(db.distance, DistanceFormat.m);
+                    line.length = new Distance(db.distance, DistanceUnit.m);
                 } else if (db.distance !== line.length.m()) {
                     changed = true;
-                    line.length.set(db.distance, DistanceFormat.m);
+                    line.length.set(db.distance, DistanceUnit.m);
                 }
                 if (db.distance < 1) {
                     if (line.bearing !== null) {
@@ -568,7 +566,7 @@ export class MapState {
         this.zoom = zoom;
         this.storage.set_coordinates("center", this.center);
         this.storage.set_int("zoom", this.zoom);
-        this.update_observers(MapStateChange.VIEW);
+        this.update_observers(MapStateChange.CENTER|MapStateChange.ZOOM);
     }
 
     public set_zoom(zoom: number): void {
@@ -855,13 +853,16 @@ export class MapState {
         }
     }
 
-    public set_default_marker_settings(settings: IMarkerSettingsDict): void {
-        this.settings_marker_coordinates_format = settings.coordinates_format;
+    public set_coordinates_format(coordinates_format: CoordinatesFormat) : void {
+        this.settings_coordinates_format = coordinates_format;
         this.storage.set(
-            "settings.marker.coordinates_format",
-            this.settings_marker_coordinates_format,
+            "settings.coordinates_format",
+            this.settings_coordinates_format,
         );
+        this.update_observers(MapStateChange.MARKERS)
+    }
 
+    public set_default_marker_settings(settings: IMarkerSettingsDict): void {
         this.settings_marker_random_color = settings.random_color;
         this.storage.set_bool("settings.marker.random_color", this.settings_marker_random_color);
 
@@ -897,10 +898,13 @@ export class MapState {
         return this.settings_marker_filled;
     }
 
-    public set_default_line_settings(settings: ILineSettingsDict): void {
-        this.settings_line_distance_format = settings.distance_format;
-        this.storage.set("settings.line.distance_format", this.settings_line_distance_format);
+    public set_distance_unit(distance_unit: DistanceUnit) : void {
+        this.settings_distance_unit = distance_unit;
+        this.storage.set("settings.distance_unit", this.settings_distance_unit);
+        this.update_observers(MapStateChange.LINES);
+    }
 
+    public set_default_line_settings(settings: ILineSettingsDict): void {
         this.settings_line_random_color = settings.random_color;
         this.storage.set_bool("settings.line.random_color", this.settings_line_random_color);
 
@@ -1096,8 +1100,9 @@ export class MapState {
             zoom: this.zoom,
             german_npa: this.german_npa,
             settings: {
+                coordinates_format: this.settings_coordinates_format,
+                distance_unit: this.settings_distance_unit,
                 markers: {
-                    coordinates_format: this.settings_marker_coordinates_format,
                     random_color: this.settings_marker_random_color,
                     color: this.settings_marker_color.to_hash_string(),
                     radius: this.settings_marker_radius,
@@ -1105,7 +1110,6 @@ export class MapState {
                     filled: this.settings_marker_filled,
                 },
                 lines: {
-                    distance_format: this.settings_line_distance_format,
                     random_color: this.settings_line_random_color,
                     color: this.settings_line_color.to_hash_string(),
                     display_distance: this.settings_line_display_distance,
@@ -1148,13 +1152,19 @@ export class MapState {
         }
 
         if ("settings" in data) {
+            if ("coordinates_format" in data.settings) {
+                this.settings_coordinates_format = parseCoordinatesFormat(
+                    data.settings.coordinates_format,
+                    this.settings_coordinates_format,
+                );
+            }
+            if ("distance_unit" in data.settings) {
+                this.settings_distance_unit = parseDistanceFormat(
+                    data.settings.distance_unit,
+                    this.settings_distance_unit,
+                );
+            }
             if ("markers" in data.settings) {
-                if ("coordinates_format" in data.settings.markers) {
-                    this.settings_marker_coordinates_format = parseCoordinatesFormat(
-                        data.settings.markers.coordinates_format,
-                        this.settings_marker_coordinates_format,
-                    );
-                }
                 if ("random_color" in data.settings.markers) {
                     this.settings_marker_random_color = data.settings.markers.random_color;
                 }
@@ -1178,12 +1188,6 @@ export class MapState {
                 }
             }
             if ("lines" in data.settings) {
-                if ("distance_format" in data.settings.lines) {
-                    this.settings_line_distance_format = parseDistanceFormat(
-                        data.settings.lines.distance_format,
-                        this.settings_line_distance_format,
-                    );
-                }
                 if ("random_color" in data.settings.lines) {
                     this.settings_line_random_color = data.settings.lines.random_color;
                 }

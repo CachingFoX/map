@@ -1,4 +1,4 @@
-@import 'config.scss';
+@use 'config.scss' as config;
 
 #sidebar {
     display: none;
@@ -6,8 +6,8 @@
     top: 0;
     bottom: 0;
     right: 0;
-    width: $sidebar_width;
-    z-index: $z_index_sidebar;
+    width: config.$sidebar_width;
+    z-index: config.$z_index_sidebar;
     background: white;
 }
 
@@ -22,13 +22,13 @@ body.sidebar-open #sidebar {
     right: 0px;
     top: 0px;
     bottom: 0;
-    z-index: $z_index_sidebar;
+    z-index: config.$z_index_sidebar;
     overflow: hidden;
     pointer-events: none;
 }
 
 body.sidebar-open #sidebar-controls {
-    right: $sidebar_width;
+    right: config.$sidebar_width;
 }
 
 .sidebar-control {

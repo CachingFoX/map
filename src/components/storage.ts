@@ -1,5 +1,5 @@
 import {Color} from "./color";
-import {Coordinates, CoordinatesFormat} from "./coordinates";
+import {Coordinates, CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
 import {parse_float, parse_int} from "./utilities";
@@ -70,19 +70,7 @@ export class Storage {
         }
 
         // CoordinatesFormat
-        let coordinates_format = CoordinatesFormat.DM;
-        switch (this.get("coordinatesFormat", null)) {
-            case "D":
-                coordinates_format = CoordinatesFormat.D;
-                break;
-            case "DM":
-                coordinates_format = CoordinatesFormat.DM;
-                break;
-            case "DMS":
-                coordinates_format = CoordinatesFormat.DMS;
-                break;
-            default:
-        }
+        let coordinates_format = parseCoordinatesFormat(this.get("coordinatesFormat", "")!, CoordinatesFormat.DMM)
 
         interface IMarkerDict {
             name: string;
@@ -176,7 +164,7 @@ export class Storage {
         }
         this.set_int("zoom", zoom);
         this.set("map_type", map_type);
-        this.set("settings.marker.coordinates_format", coordinates_format);
+        this.set("settings.coordinates_format", coordinates_format);
 
         const marker_ids = markers.map((_m: IMarkerDict, i: number): number => i);
         this.set("markers", marker_ids.join(";"));

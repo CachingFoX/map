@@ -1,20 +1,20 @@
-export enum DistanceFormat {
+export enum DistanceUnit {
     m = "m",
     km = "km",
     ft = "ft",
     mi = "mi",
 }
 
-export const parseDistanceFormat = (value: string, fallback: DistanceFormat): DistanceFormat => {
+export const parseDistanceFormat = (value: string, fallback: DistanceUnit): DistanceUnit => {
     switch (value.toLowerCase()) {
         case "m":
-            return DistanceFormat.m;
+            return DistanceUnit.m;
         case "km":
-            return DistanceFormat.km;
+            return DistanceUnit.km;
         case "ft":
-            return DistanceFormat.ft;
+            return DistanceUnit.ft;
         case "mi":
-            return DistanceFormat.mi;
+            return DistanceUnit.mi;
         default:
             return fallback;
     }
@@ -23,42 +23,42 @@ export const parseDistanceFormat = (value: string, fallback: DistanceFormat): Di
 export class Distance {
     private _raw_m: number;
 
-    public constructor(value: number, format: DistanceFormat) {
+    public constructor(value: number, format: DistanceUnit) {
         this.set(value, format);
     }
 
-    public set(value: number, format: DistanceFormat): void {
+    public set(value: number, format: DistanceUnit): void {
         switch (format) {
-            case DistanceFormat.m:
+            case DistanceUnit.m:
                 this._raw_m = value;
-            case DistanceFormat.km:
+            case DistanceUnit.km:
                 this._raw_m = value * 1000;
-            case DistanceFormat.ft:
+            case DistanceUnit.ft:
                 this._raw_m = value * 0.3048;
-            case DistanceFormat.mi:
+            case DistanceUnit.mi:
                 this._raw_m = value * 1609.344;
             default:
                 this._raw_m = value;
         }
     }
 
-    public to_string(format: DistanceFormat): string {
+    public to_string(format: DistanceUnit): string {
         let value = this._raw_m;
         let precision = 2;
         switch (format) {
-            case DistanceFormat.m:
+            case DistanceUnit.m:
                 value = this._raw_m;
                 precision = 2;
                 break;
-            case DistanceFormat.km:
+            case DistanceUnit.km:
                 value = this._raw_m / 1000;
                 precision = 3;
                 break;
-            case DistanceFormat.ft:
+            case DistanceUnit.ft:
                 value = this._raw_m / 0.3048;
                 precision = 1;
                 break;
-            case DistanceFormat.mi:
+            case DistanceUnit.mi:
                 value = this._raw_m / 1609.344;
                 precision = 3;
                 break;

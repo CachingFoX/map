@@ -7,7 +7,6 @@
                 "default-color": "Standardfarbe",
                 "display-distance": "Distanz-Anzeige",
                 "display-distance-text": "Zeige die L\u00e4nge jeder Linie direkt in der Karte an",
-                "distance-format": "Distanzeinheiten",
                 "random-colors": "Zuf\u00e4llige Farbe",
                 "title": "Linieneinstellungen"
             },
@@ -22,7 +21,6 @@
             "marker-settings": {
                 "apply": "Anwenden",
                 "bad_values_message": "Ung\u00fcltige Werte.",
-                "coordinates-format": "Koordinatenformat",
                 "default-color": "Standardfarbe",
                 "default-radius": "Standardradius (m)",
                 "default-radius-placeholder": "Radius",
@@ -152,7 +150,7 @@
                 "delete_all": "L\u00f6sche alle Marker",
                 "delete_all_question": "Willst du wirklich alle Marker l\u00f6schen?",
                 "draggable": "Verschiebbare Marker",
-                "draggable-help": "Marker können auf der Karte per Maus oder Touch verschoben werden.",
+                "draggable-help": "Marker k\u00f6nnen auf der Karte per Maus oder Touch verschoben werden.",
                 "edit": "Bearbeiten",
                 "edit_color": "Farbe",
                 "edit_color_placeholder": "Farbe",
@@ -180,6 +178,14 @@
                 "search-placeholder": "Ort",
                 "title": "Suche"
             },
+            "settings": {
+                "coordinates-format": "Koordinatenformat",
+                "coordinates-format-help": "Mitte der Karte",
+                "distance-unit": "Distanzeinheiten",
+                "distance-unit-help": "Kartendiagonale",
+                "language": "Sprache",
+                "title": "Einstellungen"
+            },
             "tools": {
                 "create-link": "Erzeuge Link",
                 "create-link-help": "Erzeuge einen Link auf die aktuelle Kartendarstellung, z.B. um diesen mit anderen zu teilen.",
@@ -187,16 +193,14 @@
                 "create-markers-help": "Erzeuge mehrere Marker auf einmal, d.h. durch Angabe einer Liste von Koordinaten.",
                 "export-gpx": "Exportiere GPX",
                 "export-gpx-help": "Exportiere/Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Beim Import werden alle existierenden Marker und Linien gel\u00f6scht.",
-                "import-gpx-keep-help": "Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Behalte existierende Marker/Linien.",
                 "export-json": "Exportiere Karten-Zustand",
                 "export-json-help": "Exportiere/Importiere den kompletten Kartenzustand (Marker, Linien, usw.) im JSON-Format.",
                 "import-gpx": "Importiere GPX",
-                "import-gpx-keep": "Importiere GPX; behalte Zustand",
                 "import-gpx-bad-file": "Fehlerhafte GPX-Datei",
+                "import-gpx-keep": "Importiere GPX; behalte Zustand",
+                "import-gpx-keep-help": "Importiere Marker (inlusive Name & Radius) und Linien im GPX-Format. Behalte existierende Marker/Linien.",
                 "import-gpx-markers": "{1} Marker gefunden, {2} Linien gefunden ({3} ignorierte Waypoints, {4} ignorierte Tracks)",
-                "import-gpx-no-markers": "Keine Marker und Linien gefunden ({1} ignorierte Waypoints, {2} ignorierte Tracks)",
                 "import-json": "Importiere Karten-Zustand",
-                "language": "Sprache",
                 "title": "Werkzeuge"
             }
         }

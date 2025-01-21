@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import {App} from "./app";
 import {Color} from "./color";
 import {Coordinates} from "./coordinates";
-import {Distance, DistanceFormat} from "./distance";
+import {Distance, DistanceUnit} from "./distance";
 import {Line} from "./line";
 import {MapStateChange} from "./map_state";
 import {MapStateObserver} from "./map_state_observer";
@@ -293,7 +293,7 @@ export class LeafletWrapper extends MapStateObserver {
             this.set_map_type(this.app.map_state.map_type!);
             this.set_german_npa(this.app.map_state.german_npa);
         }
-        if ((changes & MapStateChange.VIEW) !== 0) {
+        if ((changes & (MapStateChange.CENTER|MapStateChange.ZOOM)) !== 0) {
             this.set_map_view(this.app.map_state.center!, this.app.map_state.zoom!);
         }
 
@@ -577,7 +577,7 @@ export class LeafletWrapper extends MapStateObserver {
             // Compute midpoint
             const dist_bearing = marker1.coordinates.distance_bearing(marker2.coordinates);
             if (dist_bearing.distance > 0) {
-                midpoint_text = (new Distance(dist_bearing.distance, DistanceFormat.m)).to_string(this.app.map_state.settings_line_distance_format);
+                midpoint_text = (new Distance(dist_bearing.distance, DistanceUnit.m)).to_string(this.app.map_state.settings_distance_unit);
                 midpoint = marker1.coordinates.project(dist_bearing.bearing, dist_bearing.distance / 2);
             }
         }
@@ -653,5 +653,13 @@ export class LeafletWrapper extends MapStateObserver {
         this.styles.innerHTML += `.${className} \{${value}\}\n`;
 
         return className;
+    }
+
+    public distance_swne() : Distance {
+        let bounds : L.LatLngBounds = this.map.getBounds();
+        let ne = bounds.getNorthEast()
+        let sw = bounds.getSouthWest()
+        let d = ne.distanceTo(sw)
+        return new Distance(d, DistanceUnit.m)
     }
 }

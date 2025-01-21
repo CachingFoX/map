@@ -4,35 +4,14 @@ import {SidebarItem} from "./sidebar_item";
 import {create_element} from "./utilities";
 
 export class SidebarTools extends SidebarItem {
-    private readonly language_select: HTMLInputElement;
 
     public constructor(app: App, id: string) {
         super(app, id);
-
-        this.language_select = this._div.querySelector("[data-language]")!;
 
         interface ITitleShort {
             title: string;
             short: string;
         }
-
-        [
-            {title: "English", short: "en"},
-            {title: "Deutsch", short: "de"},
-            {title: "Français", short: "fr"},
-        ].forEach((language: ITitleShort): void => {
-            this.language_select.append(
-                new Option(
-                    language.title,
-                    language.short,
-                    language.short === "en",
-                    language.short === this.app.map_state.language,
-                ),
-            );
-        });
-        this.language_select.onchange = (): void => {
-            this.app.map_state.set_language(this.language_select.value);
-        };
 
         document.querySelector("#btn-link")!.addEventListener("click", (): void => {
             this.app.show_link_dialog();
@@ -109,11 +88,6 @@ export class SidebarTools extends SidebarItem {
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & MapStateChange.LANGUAGE) === MapStateChange.NOTHING) {
-            return;
-        }
-
-        this.language_select.value = this.app.map_state.language;
     }
 
     public export_gpx(): void {

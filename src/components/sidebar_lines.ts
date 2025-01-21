@@ -108,7 +108,7 @@ export class SidebarLines extends SidebarItem {
 
             let stats = "n/a";
             if (line.length !== null) {
-                const length = line.length.to_string(this.app.map_state.settings_line_distance_format);
+                const length = line.length.to_string(this.app.map_state.settings_distance_unit);
                 stats = (line.bearing !== null) ? `${length}, ${line.bearing.toFixed(2)}°` : length;
             }
             div.querySelector(".line-stats")!.textContent = stats;
