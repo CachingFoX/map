@@ -1,9 +1,9 @@
-import {App} from "./app";
-import {Color} from "./color";
-import {Coordinates} from "./coordinates";
+import {App} from "../app";
+import {Color} from "../color";
+import {Coordinates} from "../coordinates";
 import {Dialog} from "./dialog";
-import {MapStateChange} from "./map_state";
-import {parse_float} from "./utilities";
+import {MapStateChange} from "../map_state";
+import {parse_float} from "../utilities";
 
 export class MultiMarkersDialog extends Dialog {
     private readonly _useCommonName: HTMLInputElement;

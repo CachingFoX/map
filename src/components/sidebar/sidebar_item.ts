@@ -1,6 +1,6 @@
-import {App} from "./app";
-import {MapStateObserver} from "./map_state_observer";
-import {create_element, create_icon} from "./utilities";
+import {App} from "../app";
+import {MapStateObserver} from "../map_state_observer";
+import {create_element, create_icon} from "../utilities";
 
 export class SidebarItem extends MapStateObserver {
     protected _div: HTMLElement;

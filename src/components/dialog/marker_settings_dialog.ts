@@ -1,13 +1,8 @@
-import {App} from "./app";
-import {Color} from "./color";
-import {CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
+import {App} from "../app";
+import {Color} from "../color";
 import {Dialog} from "./dialog";
-import {parse_float} from "./utilities";
+import {parse_float} from "../utilities";
 
-interface ICoordinatesFormatDict {
-    id: string;
-    name: string;
-}
 
 export class MarkerSettingsDialog extends Dialog {
     public constructor(app: App) {

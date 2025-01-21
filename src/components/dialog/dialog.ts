@@ -1,5 +1,5 @@
-import {App} from "./app";
-import {create_element, create_icon} from "./utilities";
+import {App} from "../app";
+import {create_element, create_icon} from "../utilities";
 
 export class Dialog {
     protected readonly _app: App;

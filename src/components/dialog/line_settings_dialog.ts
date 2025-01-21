@@ -1,7 +1,7 @@
-import {App} from "./app";
-import {Color} from "./color";
+import {App} from "../app";
+import {Color} from "../color";
 import {Dialog} from "./dialog";
-import {DistanceUnit, parseDistanceFormat} from "./distance";
+import {DistanceUnit, parseDistanceFormat} from "../distance";
 
 interface IDistanceFormatDict {
     id: DistanceUnit;

@@ -1,6 +1,6 @@
-import {App} from "./app";
-import {MapStateChange} from "./map_state";
-import {MapStateObserver} from "./map_state_observer";
+import {App} from "../app";
+import {MapStateChange} from "../map_state";
+import {MapStateObserver} from "../map_state_observer";
 import {SidebarHero} from "./sidebar_hero";
 import {SidebarInfo} from "./sidebar_info";
 import {SidebarItem} from "./sidebar_item";
@@ -10,7 +10,7 @@ import {SidebarMarkers} from "./sidebar_markers";
 import {SidebarSearch} from "./sidebar_search";
 import {SidebarSettings} from "./sidebar_settings";
 import {SidebarTools} from "./sidebar_tools";
-import {create_element, create_icon} from "./utilities";
+import {create_element, create_icon} from "../utilities";
 
 export class Sidebar extends MapStateObserver {
     private readonly _sidebar_controls: HTMLDivElement;

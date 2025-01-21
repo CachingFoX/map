@@ -1,7 +1,7 @@
-import {App} from "./app";
-import {MapStateChange} from "./map_state";
+import {App} from "../app";
+import {MapStateChange} from "../map_state";
 import {SidebarItem} from "./sidebar_item";
-import {create_element} from "./utilities";
+import {create_element} from "../utilities";
 
 export class SidebarTools extends SidebarItem {
 

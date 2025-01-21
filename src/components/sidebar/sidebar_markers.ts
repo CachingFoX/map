@@ -1,11 +1,11 @@
 import Sortable from "sortablejs";
 
-import {App} from "./app";
-import {Color} from "./color";
-import {Coordinates} from "./coordinates";
-import {MapStateChange} from "./map_state";
-import {Marker} from "./marker";
-import {MarkerSettingsDialog} from "./marker_settings_dialog";
+import {App} from "../app";
+import {Color} from "../color";
+import {Coordinates} from "../coordinates";
+import {MapStateChange} from "../map_state";
+import {Marker} from "../marker";
+import {MarkerSettingsDialog} from "../dialog/marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
@@ -14,7 +14,7 @@ import {
     create_icon_button,
     create_text_input,
     parse_float,
-} from "./utilities";
+} from "../utilities";
 
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;

@@ -1,9 +1,9 @@
-import {App} from "./app";
-import {Color} from "./color";
+import {App} from "../app";
+import {Color} from "../color";
 import {Dialog} from "./dialog";
-import {MapStateChange} from "./map_state";
-import {Marker} from "./marker";
-import {parse_float} from "./utilities";
+import {MapStateChange} from "../map_state";
+import {Marker} from "../marker";
+import {parse_float} from "../utilities";
 
 export class ProjectionDialog extends Dialog {
     private marker: Marker | null = null;

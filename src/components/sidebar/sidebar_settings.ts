@@ -1,9 +1,9 @@
-import {App} from "./app";
-import {MapState, MapStateChange} from "./map_state";
+import {App} from "../app";
+import {MapState, MapStateChange} from "../map_state";
 import {SidebarItem} from "./sidebar_item";
-import {create_element} from "./utilities";
-import {CoordinatesFormat, parseCoordinatesFormat} from "./coordinates";
-import {Distance, DistanceUnit, parseDistanceFormat} from "./distance";
+import {create_element} from "../utilities";
+import {CoordinatesFormat, parseCoordinatesFormat} from "../coordinates";
+import {Distance, DistanceUnit, parseDistanceFormat} from "../distance";
 
 interface ICoordinatesFormatDict {
     id: string;

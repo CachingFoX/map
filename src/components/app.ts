@@ -2,16 +2,16 @@ import {Coordinates} from "./coordinates";
 import {IconFactory} from "./icon_factory";
 import {Language} from "./language";
 import {LeafletWrapper} from "./leaflet_wrapper";
-import {LinkDialog} from "./link_dialog";
+import {LinkDialog} from "./dialog/link_dialog";
 import {MapMenu} from "./map_menu";
 import {MapState, MapStateChange} from "./map_state";
 import {MapType} from "./map_type";
 import {Marker} from "./marker";
-import {MultiMarkersDialog} from "./multi_markers_dialog";
-import {NewsDialog} from "./news_dialog";
+import {MultiMarkersDialog} from "./dialog/multi_markers_dialog";
+import {NewsDialog} from "./dialog/news_dialog";
 import {Notifications} from "./notifications";
-import {ProjectionDialog} from "./projection_dialog";
-import {Sidebar} from "./sidebar";
+import {ProjectionDialog} from "./dialog/projection_dialog";
+import {Sidebar} from "./sidebar/sidebar";
 import {VersionCheck} from "./version_check";
 
 export class App {

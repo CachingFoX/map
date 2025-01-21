@@ -1,4 +1,4 @@
-import {App} from "./app";
+import {App} from "../app";
 import {SidebarItem} from "./sidebar_item";
 
 export class SidebarInfo extends SidebarItem {

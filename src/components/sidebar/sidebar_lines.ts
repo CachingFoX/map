@@ -1,11 +1,11 @@
 import Sortable from "sortablejs";
 
-import {App} from "./app";
-import {Color} from "./color";
-import {Line} from "./line";
-import {LineSettingsDialog} from "./line_settings_dialog";
-import {MapStateChange} from "./map_state";
-import {Marker} from "./marker";
+import {App} from "../app";
+import {Color} from "../color";
+import {Line} from "../line";
+import {LineSettingsDialog} from "../dialog/line_settings_dialog";
+import {MapStateChange} from "../map_state";
+import {Marker} from "../marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
@@ -15,7 +15,7 @@ import {
     create_select_input,
     parse_int,
     remove_element,
-} from "./utilities";
+} from "../utilities";
 
 interface INameId {
     name: string;

@@ -1,6 +1,6 @@
-import {App} from "./app";
-import {MapStateChange} from "./map_state";
-import {MapType, maptype2human, maptype2string, string2maptype} from "./map_type";
+import {App} from "../app";
+import {MapStateChange} from "../map_state";
+import {MapType, maptype2human, maptype2string, string2maptype} from "../map_type";
 import {SidebarItem} from "./sidebar_item";
 
 interface IBaseLayerDict {
