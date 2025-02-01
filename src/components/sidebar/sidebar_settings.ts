@@ -131,7 +131,7 @@ export class SidebarSettings extends SidebarItem {
         this.marker_radius.onchange = () : void => {
             var radius = 0
             if (this.marker_radius.value != "") {
-                radius = Number(this.marker_radius.value)
+                radius = Number(this.marker_radius.value) 
                 if (radius === null || Number.isNaN(radius)) {
                     this.app.message_error(
                         this.app.translate("dialog.marker-settings.bad_values_message"),
