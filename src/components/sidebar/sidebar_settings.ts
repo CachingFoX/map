@@ -25,9 +25,11 @@ export class SidebarSettings extends SidebarItem {
     private readonly distanceField: HTMLParagraphElement;
     private colorpalette_marker : ColorPalette;
     private colorpalette_line : ColorPalette;
+    private marker_color_palette : HTMLDivElement;
     private marker_random_color : HTMLInputElement;
     private marker_filled : HTMLInputElement;
     private marker_radius : HTMLInputElement;
+    private line_color_palette : HTMLDivElement;
     private line_random_color : HTMLInputElement;
     private line_display_distance : HTMLInputElement;
 
@@ -104,27 +106,39 @@ export class SidebarSettings extends SidebarItem {
         this.centerField = this._div.querySelector("#sidebar-settings-center")!;
         this.distanceField = this._div.querySelector("#sidebar-settings-distance")!;
 
-        this.colorpalette_marker = new ColorPalette(this._div.querySelector("#color-palette")!,
-                                                    this.app.map_state.settings_marker_color,
-                                                    (color) => {
-                                                        this.app.map_state.set_default_marker_settings({
-                                                            random_color: this.app.map_state.settings_marker_random_color,
-                                                            color: color,
-                                                            radius: this.app.map_state.settings_marker_radius,
-                                                            filled: this.app.map_state.settings_marker_filled
-                                                        });
-                                                    });
+        this.marker_color_palette = this._div.querySelector("#color-palette")!;
+
+        this.colorpalette_marker = new ColorPalette(this.marker_color_palette,
+                                            this.app.map_state.settings_marker_color,
+                                            (color) => {
+                                                this.app.map_state.set_default_marker_settings({
+                                                    random_color: this.app.map_state.settings_marker_random_color,
+                                                    color: color,
+                                                    radius: this.app.map_state.settings_marker_radius,
+                                                    filled: this.app.map_state.settings_marker_filled
+                                                });
+                                            });
 
         this.marker_random_color = this._div.querySelector("[data-marker-random-color]")!;
         this.marker_random_color.checked = this.app.map_state.settings_marker_random_color;
         this.marker_random_color.onchange = (): void => {
             this.app.map_state.set_default_marker_settings({
-                random_color: this.app.map_state.settings_marker_random_color,
+                random_color: this.marker_random_color.checked,
                 color: this.app.map_state.settings_marker_color,
                 radius: this.app.map_state.settings_marker_radius,
                 filled: this.app.map_state.settings_marker_filled
             });
+            if (this.marker_random_color.checked) {
+                this.marker_color_palette.style.display = "none";
+            } else {
+                this.marker_color_palette.style.display = "block";
+            }
         };
+        if (this.marker_random_color.checked) {
+            this.marker_color_palette.style.display = "none";
+        } else {
+            this.marker_color_palette.style.display = "block";
+        }
 
         this.marker_radius = this._div.querySelector("[data-marker-radius]")!;
         this.marker_radius.value = String(this.app.map_state.settings_marker_radius);
@@ -151,21 +165,23 @@ export class SidebarSettings extends SidebarItem {
         this.marker_filled.checked = this.app.map_state.settings_marker_filled;
         this.marker_filled.onchange = () : void => {
             this.app.map_state.set_default_marker_settings({
-                random_color: this.marker_random_color.checked,
+                random_color: this.app.map_state.settings_marker_random_color,
                 color: this.app.map_state.settings_marker_color,
                 radius: this.app.map_state.settings_marker_radius,
                 filled: this.marker_filled.checked
             });
         }
 
-        this.colorpalette_line = new ColorPalette(this._div.querySelector("#color-palette-line")!,
-                                                    this.app.map_state.settings_line_color,
-                                                    (color) => {
-                                                        this.app.map_state.set_default_line_settings({
-                                                            random_color: this.app.map_state.settings_line_random_color,
-                                                            color: color
-                                                        });
-                                                    });
+        this.line_color_palette = this._div.querySelector("#color-palette-line")!;
+
+        this.colorpalette_line = new ColorPalette(this.line_color_palette,
+                                        this.app.map_state.settings_line_color,
+                                        (color) => {
+                                            this.app.map_state.set_default_line_settings({
+                                                random_color: this.app.map_state.settings_line_random_color,
+                                                color: color
+                                            });
+                                        });
 
         this.line_random_color = this._div.querySelector("[data-line-random-color]")!;
         this.line_random_color.checked = this.app.map_state.settings_line_random_color;
@@ -174,7 +190,17 @@ export class SidebarSettings extends SidebarItem {
                 random_color: this.line_random_color.checked,
                 color: this.app.map_state.settings_line_color
             });
+            if (this.line_random_color.checked) {
+                this.line_color_palette.style.display = "none";
+            } else {
+                this.line_color_palette.style.display = "block";
+            }
         };
+        if (this.line_random_color.checked) {
+            this.line_color_palette.style.display = "none";
+        } else {
+            this.line_color_palette.style.display = "block";
+        }
 
         this.line_display_distance = this._div.querySelector("[data-line-display-distance]")!;
         this.line_display_distance.checked = this.app.map_state.settings_line_display_distance;

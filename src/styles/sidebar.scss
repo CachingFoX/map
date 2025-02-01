@@ -111,11 +111,19 @@ body.sidebar-open #sidebar-controls {
     }
 }
 
+/* Color Palette */
+
 .colorpalette {
     display: grid;
     grid-template-columns: repeat(12, 1fr); /* 3 Spalten */
     gap: 0px; /* Abstand zwischen Zellen */
     background-color: black; /* Rahmenfarbe */
+}
+
+.colorpalette.disabled {
+    filter: grayscale(80%);
+    opacity: 0.25;
+    pointer-events: none;   
 }
 
 .color {
