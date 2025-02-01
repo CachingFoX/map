@@ -122,7 +122,7 @@ const create_color_palette = (
     label_text: string,
     data_tag: string,
     placeholder: string,
-): HTMLElement => {
+): HTMLDivElement => {
     const field = create_element("div", ["field"]);
     const label = create_element("label", ["label"], {"data-i18n": label_text});
     label.textContent = label_text;
@@ -166,7 +166,7 @@ const create_color_palette = (
         );
     });
 
-    return field;
+    return field as HTMLDivElement;
 };
 
 

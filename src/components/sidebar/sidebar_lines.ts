@@ -3,7 +3,6 @@ import Sortable from "sortablejs";
 import {App} from "../app";
 import {Color} from "../color";
 import {Line} from "../line";
-import {LineSettingsDialog} from "../dialog/line_settings_dialog";
 import {MapStateChange} from "../map_state";
 import {Marker} from "../marker";
 import {SidebarItem} from "./sidebar_item";
@@ -24,7 +23,6 @@ interface INameId {
 
 export class SidebarLines extends SidebarItem {
     private readonly sortable: Sortable;
-    private readonly settingsDialog: LineSettingsDialog;
 
     public constructor(app: App, id: string) {
         super(app, id);
@@ -43,12 +41,6 @@ export class SidebarLines extends SidebarItem {
                     this.app.map_state.delete_all_lines();
                 },
             );
-        });
-
-        this.settingsDialog = new LineSettingsDialog(app);
-
-        document.querySelector("#btn-line-settings")!.addEventListener("click", (): void => {
-            this.settingsDialog.show();
         });
 
         this.sortable = Sortable.create(document.getElementById("lines")!, {

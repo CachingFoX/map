@@ -1,9 +1,11 @@
 import {App} from "../app";
 import {MapState, MapStateChange} from "../map_state";
 import {SidebarItem} from "./sidebar_item";
-import {create_element} from "../utilities";
+import {create_element,create_color_palette} from "../utilities";
 import {CoordinatesFormat, parseCoordinatesFormat} from "../coordinates";
 import {Distance, DistanceUnit, parseDistanceFormat} from "../distance";
+import { ColorPalette } from "../color_palette";
+
 
 interface ICoordinatesFormatDict {
     id: string;
@@ -21,6 +23,14 @@ export class SidebarSettings extends SidebarItem {
     private readonly units_format_select: HTMLInputElement;
     private readonly centerField: HTMLParagraphElement;
     private readonly distanceField: HTMLParagraphElement;
+    private colorpalette_marker : ColorPalette;
+    private colorpalette_line : ColorPalette;
+    private marker_random_color : HTMLInputElement;
+    private marker_filled : HTMLInputElement;
+    private marker_radius : HTMLInputElement;
+    private line_random_color : HTMLInputElement;
+    private line_display_distance : HTMLInputElement;
+
 
     public constructor(app: App, id: string) {
         super(app, id);
@@ -93,6 +103,84 @@ export class SidebarSettings extends SidebarItem {
 
         this.centerField = this._div.querySelector("#sidebar-settings-center")!;
         this.distanceField = this._div.querySelector("#sidebar-settings-distance")!;
+
+        this.colorpalette_marker = new ColorPalette(this._div.querySelector("#color-palette")!,
+                                                    this.app.map_state.settings_marker_color,
+                                                    (color) => {
+                                                        this.app.map_state.set_default_marker_settings({
+                                                            random_color: this.app.map_state.settings_marker_random_color,
+                                                            color: color,
+                                                            radius: this.app.map_state.settings_marker_radius,
+                                                            filled: this.app.map_state.settings_marker_filled
+                                                        });
+                                                    });
+
+        this.marker_random_color = this._div.querySelector("[data-marker-random-color]")!;
+        this.marker_random_color.checked = this.app.map_state.settings_marker_random_color;
+        this.marker_random_color.onchange = (): void => {
+            this.app.map_state.set_default_marker_settings({
+                random_color: this.app.map_state.settings_marker_random_color,
+                color: this.app.map_state.settings_marker_color,
+                radius: this.app.map_state.settings_marker_radius,
+                filled: this.app.map_state.settings_marker_filled
+            });
+        };
+
+        this.marker_radius = this._div.querySelector("[data-marker-radius]")!;
+        this.marker_radius.value = String(this.app.map_state.settings_marker_radius);
+        this.marker_radius.onchange = () : void => {
+            var radius = 0
+            if (this.marker_radius.value != "") {
+                radius = Number(this.marker_radius.value)
+                if (radius === null || Number.isNaN(radius)) {
+                    this.app.message_error(
+                        this.app.translate("dialog.marker-settings.bad_values_message"),
+                    );
+                    return;
+                }
+            }
+            this.app.map_state.set_default_marker_settings({
+                random_color: this.app.map_state.settings_marker_random_color,
+                color: this.app.map_state.settings_marker_color,
+                radius: radius,
+                filled: this.app.map_state.settings_marker_filled
+            });
+        }
+
+        this.marker_filled = this._div.querySelector("[data-marker-filled]")!;
+        this.marker_filled.checked = this.app.map_state.settings_marker_filled;
+        this.marker_filled.onchange = () : void => {
+            this.app.map_state.set_default_marker_settings({
+                random_color: this.marker_random_color.checked,
+                color: this.app.map_state.settings_marker_color,
+                radius: this.app.map_state.settings_marker_radius,
+                filled: this.marker_filled.checked
+            });
+        }
+
+        this.colorpalette_line = new ColorPalette(this._div.querySelector("#color-palette-line")!,
+                                                    this.app.map_state.settings_line_color,
+                                                    (color) => {
+                                                        this.app.map_state.set_default_line_settings({
+                                                            random_color: this.app.map_state.settings_line_random_color,
+                                                            color: color
+                                                        });
+                                                    });
+
+        this.line_random_color = this._div.querySelector("[data-line-random-color]")!;
+        this.line_random_color.checked = this.app.map_state.settings_line_random_color;
+        this.line_random_color.onchange = (): void => {
+            this.app.map_state.set_default_line_settings({
+                random_color: this.line_random_color.checked,
+                color: this.app.map_state.settings_line_color
+            });
+        };
+
+        this.line_display_distance = this._div.querySelector("[data-line-display-distance]")!;
+        this.line_display_distance.checked = this.app.map_state.settings_line_display_distance;
+        this.line_display_distance.onchange = (): void => {
+            this.app.map_state.set_display_distance(this.line_display_distance.checked);
+        };
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
