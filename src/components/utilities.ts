@@ -62,6 +62,16 @@ const create_element = (
     return element;
 };
 
+const create_label = (
+    text: string,
+    i18n_key : string,
+    attributes: Record<string, string | null> = {},
+): HTMLElement => {
+    const element = create_element("label", ["label"], {"data-i18n": i18n_key});
+    element.textContent = text;
+    return element;
+};
+
 const remove_element = (node: HTMLElement | null): void => {
     if (node === null) {
         return;
@@ -117,71 +127,6 @@ const create_color_input = (
 
     return field;
 };
-
-const create_color_palette = (
-    label_text: string,
-    data_tag: string,
-    placeholder: string,
-): HTMLDivElement => {
-    const field = create_element("div", ["field"]);
-    const label = create_element("label", ["label"], {"data-i18n": label_text});
-    label.textContent = label_text;
-    field.append(label);
-
-    const palette = create_element("div", ["colorpalette"]);
-    field.append(palette);
-
-    Color.palette.forEach((color) => {
-        const color_pot = create_element("div", 
-                                ["color", "colorpot"]) as HTMLElement;
-        color_pot.style.backgroundColor = "#"+color;
-        const color_object = Color.from_string(color)
-        if (color_object!==null) {
-            let luma = color_object.luma()
-            color_pot.dataset.luma = String(luma);
-            if (luma < 130) {
-                color_pot.classList.add("dark")
-            } else {
-                color_pot.classList.add("light")
-            }
-            let basic_luma = Math.floor(luma/16)
-            color_pot.dataset.luma = String(luma);
-            color_pot.classList.add("luma-"+String(basic_luma));
-        }
-        color_pot.dataset.color = color;
-
-        palette.appendChild(color_pot);
-        color_pot.addEventListener("click", 
-            (event): void => {
-                // remove selection
-                const markerElements = palette.querySelectorAll(".selected");
-                markerElements.forEach((element) => {
-                    (element as HTMLElement).classList.remove("selected");
-                });
-
-                // set selected color
-                const element = event.currentTarget as HTMLElement;
-                element.classList.add("selected");
-            }
-        );
-    });
-
-    return field as HTMLDivElement;
-};
-
-
-const color_palette_selected_pot = (
-    div: HTMLDivElement,
-    selected_color : String
-) : void => {
-    const markerElements = div.querySelectorAll(".colorpot");
-    markerElements.forEach((element) => {
-        (element as HTMLElement).classList.remove("selected");
-        if ((element as HTMLElement).dataset.color == selected_color)  {
-            (element as HTMLElement).classList.add("selected");
-        }
-    });
-}
 
 const create_select_input = (data_tag: string): {div: HTMLDivElement; select: HTMLSelectElement} => {
     const control = create_element("div", ["control"]);
@@ -290,21 +235,20 @@ const xml_escape = (s: string): string => {
 };
 
 export {
-    parse_float,
-    parse_int,
-    create_element,
     create_button,
-    create_icon_button,
-    create_dropdown,
-    create_text_input,
     create_color_input,
-    create_color_palette,
-    create_select_input,
+    create_dropdown,
+    create_element,
+    create_icon_button,
     create_icon,
+    create_label,
+    create_select_input,
+    create_text_input,
     encode_parameters,
     is_number,
     is_string,
-    color_palette_selected_pot,
+    parse_float,
+    parse_int,
     remove_element,
     xml_escape,
 };

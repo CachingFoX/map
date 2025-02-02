@@ -1,10 +1,9 @@
 import {App} from "../app";
-import {MapState, MapStateChange} from "../map_state";
+import {MapStateChange} from "../map_state";
 import {SidebarItem} from "./sidebar_item";
-import {create_element,create_color_palette} from "../utilities";
 import {CoordinatesFormat, parseCoordinatesFormat} from "../coordinates";
-import {Distance, DistanceUnit, parseDistanceFormat} from "../distance";
-import { ColorPalette } from "../color_palette";
+import {DistanceUnit, parseDistanceFormat} from "../distance";
+import {ColorPalette} from "../color_palette";
 
 
 interface ICoordinatesFormatDict {

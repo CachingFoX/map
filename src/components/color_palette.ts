@@ -1,4 +1,4 @@
-import {create_element,create_color_palette,color_palette_selected_pot} from "./utilities";
+import {create_element} from "./utilities";
 import {Color} from "./color";
 
 type Callback = (color : Color) => void;
@@ -6,7 +6,6 @@ type Callback = (color : Color) => void;
 export class ColorPalette {
     private readonly anchor : HTMLDivElement;
     private readonly palette : HTMLDivElement
-    private readonly heading : string;
     private readonly callback : Callback;
     private selected_color: Color;
 
@@ -15,80 +14,71 @@ export class ColorPalette {
         this.selected_color = selected_color;
         this.callback = func;
 
-        this.palette = this.create_color_palette()
+        this.palette = create_element("div", ["colorpalette"]) as HTMLDivElement;
+        this.create_color_palette()
+        this.anchor.append(this.palette);
     }
 
     public get_selected_color() : Color {
         return this.selected_color;
     }
 
-    private create_color_palette(): HTMLDivElement {
-        const label_text = this.heading;
-        const data_tag = this.selected_color.to_hash_string();
-        const placeholder = "";
+    private create_color_pot( color : string, column_span : number ) {
+        const color_pot = create_element("div", 
+            ["color", "colorpot"]) as HTMLElement;
 
-        const palette = create_element("div", ["colorpalette"], {"data-radius":""});
-        this.anchor.append(palette);
-    
-        const selected_color = this.selected_color.to_string()
-        palette.dataset.color = selected_color;
+        color_pot.style.backgroundColor = "#"+color;
+        const color_object = Color.from_string(color)
+        if (color_object!==null) {
+            let luma = color_object.luma()
+            color_pot.dataset.luma = String(luma);
+            color_pot.classList.add(luma < 130 ? "dark" : "light");
+            let basic_luma = Math.floor(luma/16)
+            color_pot.dataset.luma = String(luma);
+            color_pot.classList.add("luma-"+String(basic_luma));
+        }
+        color_pot.dataset.color = color;
 
-        Color.palette.forEach((color) => {
-            const color_pot = create_element("div", 
-                                    ["color", "colorpot"]) as HTMLElement;
-            color_pot.style.backgroundColor = "#"+color;
-            const color_object = Color.from_string(color)
-            if (color_object!==null) {
-                let luma = color_object.luma()
-                color_pot.dataset.luma = String(luma);
-                if (luma < 130) {
-                    color_pot.classList.add("dark")
-                } else {
-                    color_pot.classList.add("light")
-                }
-                let basic_luma = Math.floor(luma/16)
-                color_pot.dataset.luma = String(luma);
-                color_pot.classList.add("luma-"+String(basic_luma));
+        if (column_span > 1) {
+            color_pot.style.gridColumn = "span "+column_span;
+        } 
+
+        this.palette.appendChild(color_pot);
+        color_pot.addEventListener("click", 
+            (event): void => {
+                this.selected_color = color_object!;
+                this.mark_selected_color_pot(color)
+                // callback
+                this.callback(this.selected_color);
             }
-            color_pot.dataset.color = color;
+        );
+    }
 
-            console.log(color,selected_color);
-            if (color == selected_color)  {
-                color_pot.classList.add("selected");
-            } else {
-                //color_pot.classList.remove("selected");
-            }
-    
-            palette.appendChild(color_pot);
-            color_pot.addEventListener("click", 
-                (event): void => {
-                    this.select_color(event.currentTarget as HTMLDivElement);
-                }
-            );
-        });
+    private mark_selected_color_pot( selected_color : string ) : boolean {
+        this.palette.dataset.color = selected_color;
 
-        return palette as HTMLDivElement;
-    };
-
-    private select_color(color_pot : HTMLDivElement) :  void {
-        // remove selection
         const markerElements = this.palette.querySelectorAll(".selected");
         markerElements.forEach((element) => {
             (element as HTMLElement).classList.remove("selected");
         });
-        // set selected color
-        color_pot.classList.add("selected");
-
-        if (color_pot.dataset.color) {
-            this.palette.dataset.color = color_pot.dataset.color;
-            this.selected_color = new Color(color_pot.dataset.color);
-
-            // callback
-            this.callback(this.selected_color);
+        var pot = this.palette.querySelector("[data-color='"+selected_color+"']");
+        if (pot !== null) {
+            pot.classList.add("selected");
+            return true;
         }
+        return false;
     }
 
-    public update() : void {
+    private create_color_palette() {
+        Color.palette.forEach((color) => {
+            this.create_color_pot(color, 1);
+        });
 
-    }
+        const selected_color = this.selected_color.to_string()
+        if (!this.mark_selected_color_pot(selected_color)) {
+            this.create_color_pot(selected_color, 12);
+            this.mark_selected_color_pot(selected_color)
+        }
+    };
+
 }

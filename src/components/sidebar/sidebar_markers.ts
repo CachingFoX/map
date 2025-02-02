@@ -8,12 +8,11 @@ import {Marker} from "../marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
-    create_color_palette,
     create_element,
     create_icon_button,
+    create_label,
     create_text_input,
     parse_float,
-    color_palette_selected_pot,
 } from "../utilities";
 import { ColorPalette } from "../color_palette";
 
@@ -183,9 +182,10 @@ export class SidebarMarkers extends SidebarItem {
         center.append(create_element("div", ["marker-name", "no-select"]));
         center.append(create_element("div", ["marker-coordinates", "no-select"]));
         const circleDiv = create_element("div", ["marker-radius", "no-select", "is-hidden"]);
-        const circleDivLabel = create_element("div", ["marker-radius-label"], {"data-i18n": "sidebar.markers.circle"});
-        circleDivLabel.innerText = this.app.translate("sidebar.markers.circle");
-        circleDiv.append(circleDivLabel);
+
+        circleDiv.append(
+            create_label(this.app.translate("sidebar.markers.circle"), "sidebar.markers.circle")
+        );
         circleDiv.append(create_element("div", ["marker-radius-value"]));
         center.append(circleDiv);
         m.append(center);
@@ -270,10 +270,9 @@ export class SidebarMarkers extends SidebarItem {
         );
         div.append(radius);
         
-        const label_text = this.app.translate("sidebar.markers.edit_color");
-        const label = create_element("label", ["label"], {"data-i18n": label_text});
-        label.textContent = label_text;
-        div.append(label);
+        div.append(
+            create_label(this.app.translate("sidebar.markers.edit_color"), "sidebar.markers.edit_color")
+        );
 
         const color = create_element("div", ["field"]) as HTMLDivElement;
         const palette = new ColorPalette(color, marker.color,
