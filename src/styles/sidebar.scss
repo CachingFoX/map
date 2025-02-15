@@ -110,3 +110,33 @@ body.sidebar-open #sidebar-controls {
         min-height: 0;
     }
 }
+
+/* Color Palette */
+
+.colorpalette {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr); /* 3 Spalten */
+    gap: 0px; /* Abstand zwischen Zellen */
+    background-color: black; /* Rahmenfarbe */
+}
+
+.colorpalette.disabled {
+    filter: grayscale(80%);
+    opacity: 0.25;
+    pointer-events: none;   
+}
+
+.color {
+    padding: 8px;
+    background-color: white;
+    text-align: center;
+    border: 2px solid transparent; /* Alternativer Rahmen */
+    box-sizing: border-box;
+}
+
+.color.light:hover, .selected.light {
+    border: 2px solid black;
+}
+.color.dark:hover, .selected.dark {
+    border: 2px solid white;
+}

@@ -184,7 +184,19 @@
                 "distance-unit": "Distanzeinheiten",
                 "distance-unit-help": "Kartendiagonale",
                 "language": "Sprache",
-                "title": "Einstellungen"
+                "title": "Einstellungen",
+                "subtitle-marker": "Marker",
+                "default-color": "Standardfarbe",
+                "random-colors": "Zuf\u00e4llige Farbe",
+                "default-radius": "Standardradius (m)",
+                "default-radius-placeholder": "Radius",
+                "filled": "Gef\u00fcllte Kreise",
+                "subtitle-line": "Linieneinstellungen",
+                "bad_values_message": "Ung\u00fcltige Werte.",
+                "default-color": "Standardfarbe",
+                "display-distance": "Distanz-Anzeige",
+                "display-distance-text": "Zeige die L\u00e4nge jeder Linie direkt in der Karte an",
+                "random-colors": "Zuf\u00e4llige Farbe"
             },
             "tools": {
                 "create-link": "Erzeuge Link",

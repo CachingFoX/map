@@ -5,26 +5,23 @@ import {Color} from "../color";
 import {Coordinates} from "../coordinates";
 import {MapStateChange} from "../map_state";
 import {Marker} from "../marker";
-import {MarkerSettingsDialog} from "../dialog/marker_settings_dialog";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
-    create_color_input,
     create_element,
     create_icon_button,
+    create_label,
     create_text_input,
     parse_float,
 } from "../utilities";
+import { ColorPalette } from "../color_palette";
 
 export class SidebarMarkers extends SidebarItem {
     private readonly sortable: Sortable;
-    private readonly settingsDialog: MarkerSettingsDialog;
     private readonly draggableMarkers: HTMLInputElement;
 
     public constructor(app: App, id: string) {
         super(app, id, "https://blog.flopp.net/the-markers-sidebar/");
-
-        this.settingsDialog = new MarkerSettingsDialog(app);
 
         document.querySelector("#btn-add-marker")!.addEventListener("click", (): void => {
             this.app.map_state.add_marker(null);
@@ -50,9 +47,6 @@ export class SidebarMarkers extends SidebarItem {
         document.querySelector("#marker-sort-distance")!.addEventListener("click", (): void => {
             this.app.map_state.sort_markers_by_distance();
         });
-        document.querySelector("#btn-marker-settings")!.addEventListener("click", (): void => {
-            this.settingsDialog.show();
-        });
 
         this.draggableMarkers = this._div.querySelector("#draggable-markers") as HTMLInputElement;
         this.draggableMarkers.onchange = (): void => {
@@ -74,8 +68,7 @@ export class SidebarMarkers extends SidebarItem {
     private update_div(marker: Marker, div: HTMLDivElement): void {
         const display_div = div.querySelector(".marker-display") as HTMLDivElement;
 
-        (display_div.querySelector(
-            ".marker-color",
+        (display_div.querySelector(".marker-color",
         ) as HTMLElement).style.backgroundColor = marker.color.to_hash_string();
         display_div.querySelector(".marker-name")!.textContent = marker.name;
         display_div.querySelector(".marker-coordinates")!.textContent = marker.coordinates.to_string(
@@ -189,9 +182,10 @@ export class SidebarMarkers extends SidebarItem {
         center.append(create_element("div", ["marker-name", "no-select"]));
         center.append(create_element("div", ["marker-coordinates", "no-select"]));
         const circleDiv = create_element("div", ["marker-radius", "no-select", "is-hidden"]);
-        const circleDivLabel = create_element("div", ["marker-radius-label"], {"data-i18n": "sidebar.markers.circle"});
-        circleDivLabel.innerText = this.app.translate("sidebar.markers.circle");
-        circleDiv.append(circleDivLabel);
+
+        circleDiv.append(
+            create_label(this.app.translate("sidebar.markers.circle"), "sidebar.markers.circle")
+        );
         circleDiv.append(create_element("div", ["marker-radius-value"]));
         center.append(circleDiv);
         m.append(center);
@@ -260,21 +254,30 @@ export class SidebarMarkers extends SidebarItem {
             "data-name",
             this.app.translate("sidebar.markers.edit_name_placeholder"),
         );
+        div.append(name);
+
         const coordinates = create_text_input(
             this.app.translate("sidebar.markers.edit_coordinates"),
             "data-coordinates",
             this.app.translate("sidebar.markers.edit_coordinates_placeholder"),
         );
+        div.append(coordinates);
+
         const radius = create_text_input(
             this.app.translate("sidebar.markers.edit_radius"),
             "data-radius",
             this.app.translate("sidebar.markers.edit_radius_placeholder"),
         );
-        const color = create_color_input(
-            this.app.translate("sidebar.markers.edit_color"),
-            "data-color",
-            this.app.translate("sidebar.markers.edit_color_placeholder"),
+        div.append(radius);
+        
+        div.append(
+            create_label(this.app.translate("sidebar.markers.edit_color"), "sidebar.markers.edit_color")
         );
+
+        const color = create_element("div", ["field"]) as HTMLDivElement;
+        const palette = new ColorPalette(color, marker.color,
+                                (color) => {});
+        div.append(color);
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
             this.submit_edit(marker, div);
@@ -285,14 +288,9 @@ export class SidebarMarkers extends SidebarItem {
         const buttons = create_element("div", ["field", "is-grouped"]);
         buttons.append(submit_button);
         buttons.append(cancel_button);
-
-        div.append(name);
-        div.append(coordinates);
-        div.append(radius);
-        div.append(color);
         div.append(buttons);
 
-        return div;
+        return div    
     }
 
     private update_edit_values(marker: Marker, div: HTMLDivElement): void {
@@ -303,9 +301,6 @@ export class SidebarMarkers extends SidebarItem {
             this.app.map_state.settings_coordinates_format,
         );
         (div.querySelector("[data-radius]") as HTMLInputElement).value = String(marker.radius);
-        (div.querySelector(
-            "[data-color]",
-        ) as HTMLInputElement).value = marker.color.to_hash_string();
     }
 
     private submit_edit(marker: Marker, div: HTMLDivElement): void {
@@ -314,13 +309,16 @@ export class SidebarMarkers extends SidebarItem {
             (div.querySelector("[data-coordinates]") as HTMLInputElement).value,
         );
         const radius = parse_float((div.querySelector("[data-radius]") as HTMLInputElement).value);
-        const color = Color.from_string(
-            (div.querySelector("[data-color]") as HTMLInputElement).value,
-        );
+
+        const color_palette = div.querySelector("[data-color]") as HTMLElement;
+        var color_value = color_palette.dataset.color;
+        if (color_value === undefined) {
+            color_value =  "#000000";
+        }
+        const color = new Color(color_value);
 
         if (name.length === 0 || coordinates === null || radius === null || color === null) {
             this.app.message_error(this.app.translate("sidebar.markers.bad_values_message"));
-
             return;
         }
 

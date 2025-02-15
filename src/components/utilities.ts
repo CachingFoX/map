@@ -1,3 +1,7 @@
+import {
+    Color
+} from "./color";
+
 const is_string = (s: any): boolean => Object.prototype.toString.call(s) === "[object String]";
 
 const is_number = (s: any): boolean => Object.prototype.toString.call(s) === "[object Number]";
@@ -55,6 +59,16 @@ const create_element = (
         element.setAttribute(key, value !== null ? value : "");
     }
 
+    return element;
+};
+
+const create_label = (
+    text: string,
+    i18n_key : string,
+    attributes: Record<string, string | null> = {},
+): HTMLElement => {
+    const element = create_element("label", ["label"], {"data-i18n": i18n_key});
+    element.textContent = text;
     return element;
 };
 
@@ -221,19 +235,20 @@ const xml_escape = (s: string): string => {
 };
 
 export {
-    parse_float,
-    parse_int,
-    create_element,
     create_button,
-    create_icon_button,
-    create_dropdown,
-    create_text_input,
     create_color_input,
-    create_select_input,
+    create_dropdown,
+    create_element,
+    create_icon_button,
     create_icon,
+    create_label,
+    create_select_input,
+    create_text_input,
     encode_parameters,
     is_number,
     is_string,
+    parse_float,
+    parse_int,
     remove_element,
     xml_escape,
 };

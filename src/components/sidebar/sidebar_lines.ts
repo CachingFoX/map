@@ -3,19 +3,19 @@ import Sortable from "sortablejs";
 import {App} from "../app";
 import {Color} from "../color";
 import {Line} from "../line";
-import {LineSettingsDialog} from "../dialog/line_settings_dialog";
 import {MapStateChange} from "../map_state";
 import {Marker} from "../marker";
 import {SidebarItem} from "./sidebar_item";
 import {
     create_button,
-    create_color_input,
     create_element,
     create_icon_button,
+    create_label,
     create_select_input,
     parse_int,
     remove_element,
 } from "../utilities";
+import { ColorPalette } from "../color_palette";
 
 interface INameId {
     name: string;
@@ -24,7 +24,6 @@ interface INameId {
 
 export class SidebarLines extends SidebarItem {
     private readonly sortable: Sortable;
-    private readonly settingsDialog: LineSettingsDialog;
 
     public constructor(app: App, id: string) {
         super(app, id);
@@ -43,12 +42,6 @@ export class SidebarLines extends SidebarItem {
                     this.app.map_state.delete_all_lines();
                 },
             );
-        });
-
-        this.settingsDialog = new LineSettingsDialog(app);
-
-        document.querySelector("#btn-line-settings")!.addEventListener("click", (): void => {
-            this.settingsDialog.show();
         });
 
         this.sortable = Sortable.create(document.getElementById("lines")!, {
@@ -225,11 +218,15 @@ export class SidebarLines extends SidebarItem {
         const div = create_element("div", ["edit"], {
             id: `line-edit-${line.get_id()}`,
         });
-        const color = create_color_input(
-            this.app.translate("sidebar.lines.edit_color"),
-            "data-color",
-            this.app.translate("sidebar.lines.edit_color_placeholder"),
+
+        div.append(
+            create_label(this.app.translate("sidebar.lines.edit_color"), "sidebar.lines.edit_color")
         );
+
+        const color = create_element("div", ["field"]) as HTMLDivElement;
+        const palette = new ColorPalette(color, line.color,
+                                (color) => {});
+        div.append(color);
 
         const submit_button = create_button(this.app.translate("general.submit"), (): void => {
             this.submit_edit(line);
@@ -241,28 +238,26 @@ export class SidebarLines extends SidebarItem {
         buttons.append(submit_button);
         buttons.append(cancel_button);
 
-        div.append(color);
         div.append(buttons);
 
         return div;
     }
 
     private update_edit_values(line: Line): void {
-        const div = document.querySelector(`#line-edit-${line.get_id()}`);
-        if (div !== null) {
-            (div.querySelector("[data-color]") as HTMLInputElement).value = line.color.to_hash_string();
-        }
     }
 
     private submit_edit(line: Line): void {
         const div = document.querySelector(`#line-edit-${line.get_id()}`) as HTMLElement;
-        const color = Color.from_string(
-            (div.querySelector("[data-color]") as HTMLInputElement).value,
-        );
+
+        const color_palette = div.querySelector("[data-color]") as HTMLElement;
+        var color_value = color_palette.dataset.color;
+        if (color_value === undefined) {
+            color_value =  "#000000";
+        }
+        const color = new Color(color_value);
 
         if (color === null) {
             this.app.message_error(this.app.translate("sidebar.lines.bad_values_message"));
-
             return;
         }
 
