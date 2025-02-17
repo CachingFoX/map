@@ -15,8 +15,6 @@ export class SidebarSearch extends SidebarItem {
     public constructor(app: App, id: string) {
         super(app, id, "https://blog.flopp.net/the-search-sidebar/");
 
-        this.centerField = document.querySelector("#sidebar-search-center")!;
-
         document.querySelector("#btn-locate")!.addEventListener("click", (): void => {
             this.app.locate_me();
         });
@@ -30,37 +28,11 @@ export class SidebarSearch extends SidebarItem {
                     this.perform_search();
                 }
             });
-        document.querySelector("#sidebar-search-center-copy")!.addEventListener("click", (event: Event): void => {
-            const center = this.app.map_state.center;
-            if (center === null) {
-                return;
-            }
-            const text = center.to_string(
-                this.app.map_state.settings_coordinates_format,
-            );
-            this.app.copyClipboard(
-                text,
-                this.app.translate("sidebar.markers.copy_coordinates_success_message", text),
-                this.app.translate("sidebar.markers.copy_coordinates_failure_message"),
-            );
-            event.stopPropagation();
-        });
-        document.querySelector("#sidebar-search-add-marker")!.addEventListener("click", (): void => {
-            this.app.map_state.add_marker(null);
-        });
-
         this.clear_results();
     }
 
     public update_state(changes: number, _marker_id: number = -1): void {
-        if ((changes & (MapStateChange.CENTER | MapStateChange.MARKERS)) === MapStateChange.NOTHING) {
-            return;
-        }
-
-        this.centerField.innerText =
-            (this.app.map_state.center === null) ?
-            "n/a" :
-            this.app.map_state.center.to_string(this.app.map_state.settings_coordinates_format);
+        return
     }
 
     public display_results(results: INameCoordinates[]): void {
