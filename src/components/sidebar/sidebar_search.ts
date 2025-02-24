@@ -1,5 +1,6 @@
 import {App} from "../app";
 import {Coordinates} from "../coordinates";
+import Handlebars from "handlebars";
 import {MapStateChange} from "../map_state";
 import {SidebarItem} from "./sidebar_item";
 import { create_element } from "../utilities";
