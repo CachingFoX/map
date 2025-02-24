@@ -176,7 +176,11 @@
                 "locate-me-help": "Zentriere die Karte auf deiner aktuellen Position.",
                 "search-help": "Suche nach einem Ortsnamen oder gib Koordinaten ein.",
                 "search-placeholder": "Ort",
-                "title": "Suche"
+                "title": "Suche",
+                "results": "Ergebnisse",
+                "more-results": "Mehr Ergebnisse",
+                "result-counter-x-of-y": "$1 von $2 Ergebnissen",
+                "result-counter-x": "$2 Ergebnisse"
             },
             "settings": {
                 "coordinates-format": "Koordinatenformat",

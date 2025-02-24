@@ -76,8 +76,10 @@
                 </div>
             </div>
 
+            
             <div class="sidebar-container" id="sidebar-search">
-                <div class="scrollable-content content">
+                
+                <div class="content">
                     <div class="field">
                         <div class="control">
                             <a id="btn-locate" data-i18n="sidebar.search.locate-me" class="button is-fullwidth is-success">Locate Me</a>
@@ -99,10 +101,47 @@
                             </div>
                         </div>
                         <p data-i18n="sidebar.search.search-help" class="help">Search for a location (enter e.g. a city name or coordinates in various formats) and center the map.</p>
-                        <ul id="search-results"></ul>
                     </div>
-
                 </div>
+
+                <div class="content">
+                    <div class="field">
+                        <label class="label" data-i18n="sidebar.search.results">Results</label>
+                    </div>
+                </div>
+
+                <div class="scrollable-content">
+                    <div id="sidebar-search-no-results" class="result-special is-hidden">
+                        <div data-i18n="search.no-result" class="is-fullwidth">no results</div>
+                    </div>
+                    
+                    <script id="result-item" type="text/x-handlebars-template">
+                        <div class="result-display active">
+                            <div class="result-left"></div>
+                            <div class="result-center">
+                                <div class="primary">{{name}}</div>
+                                <div class="secondary">{{feature}}</div>
+                                <div class="secondary">
+                                    {{country_flag country_code}}
+                                    {{~country_name~}}
+                                    {{~#if region_name~}}, {{region_name}}{{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </script>
+                 
+                    <div id="search-results" class="scrollable-list"></div>
+                    <div id="sidebar-search-more-results" class="result-special is-hidden">
+                        <a class="button is-fullwidth is-success">
+                            <span data-i18n="sidebar.search.more-results">Mehr</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div id="sidebar-search-result-counter" class="result-special center narrow small is-fullwidth is-hidden no-select"></div>
+                </div>
+               
             </div>
 
             <div class="sidebar-container" id="sidebar-markers">

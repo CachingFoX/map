@@ -176,7 +176,10 @@
                 "locate-me-help": "Determine your current location and center the map.",
                 "search-help": "Search for a place or enter coordinates.",
                 "search-placeholder": "Location",
-                "title": "Search"
+                "title": "Search",
+                "results": "Results",
+                "more-results": "More results",
+                "result-counter-x-of-y": "$1 of $2 results"
             },
             "settings": {
                 "coordinates-format": "Coordinates Format",

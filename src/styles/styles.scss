@@ -27,6 +27,77 @@ body {
     display: block;
 }
 
+.result {
+    display: flex;
+    flex-direction: column;
+
+}
+.result-display.active:hover {
+    background-color: aliceblue;
+}
+
+.result-special {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.result-special.center {
+    text-align:center;
+}
+.result-special.narrow {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+.result-special.small {
+    font-size: 0.75rem;
+}
+
+.result-display {
+    align-items: stretch;
+    display: flex;
+    text-align: left;
+    border-bottom: 1px solid #e6e6e6;
+    overflow-x: hidden;
+    cursor: pointer;
+}
+
+
+.result-display > .result-left {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 4px;
+    height: 100%;
+    margin-left: 1px;
+    margin-right: 4px;
+}
+.result-display > .result-right {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 4px;
+    height: 100%;
+    margin-left: 4px;
+    margin-right: 1px;
+}
+
+.result-display > .result-center {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+    text-align: left;
+}
+.result-display .primary {
+    /* display: block;
+    font-size: 0.75rem; */
+    /*font-weight: bold;*/
+}
+.result-display .secondary {
+    display: block;
+    font-size: 0.75rem;
+}
+
 .marker {
     display: flex;
     flex-direction: column;
